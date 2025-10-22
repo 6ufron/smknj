@@ -45,7 +45,7 @@
         .navbar { z-index: 999 !important; }
 
         /* Gaya Tumpukan Kartu untuk Desktop */
-        .card-stack-container { position: absolute; bottom: 20%; right: 15%; width: 330px; height: 240px; z-index: 10; perspective: 1000px; transition: all 0.4s ease; }
+        .card-stack-container { position: absolute; bottom: 28%; right: 10%; width: 500px; height: 360px; z-index: 10; perspective: 1000px; transition: all 0.4s ease; }
         .card-stack-item { position: absolute; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .card-stack-item img { width: 100%; height: 100%; object-fit: cover; }
         .card-stack-item[data-stack-pos="0"] { transform: translate(0, 0) scale(1); opacity: 1; z-index: 3; }
