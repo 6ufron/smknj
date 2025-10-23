@@ -54,6 +54,36 @@
         .card-stack-item:not([data-stack-pos="0"]):not([data-stack-pos="1"]):not([data-stack-pos="2"]) { transform: translateX(150px) scale(0.7); opacity: 0; z-index: 0; }
         .card-stack-item.is-promoting { transform: scale(8) translate(-15%, -15%); opacity: 0; z-index: 20; }
 
+        /* --- CSS UNTUK TOMBOL CLOSE CHATBOT --- */
+        #close-chatbot-button {
+            position: fixed;
+            bottom: 80px;  /* Posisikan 80px dari bawah */
+            right: 15px;   /* Posisikan 15px dari kanan */
+            width: 25px;
+            height: 25px;
+            background-color: #FEA116; /* Warna oranye (sesuai tema) */
+            color: #0F172B; /* Warna teks gelap (sesuai tema) */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 2147483647; 
+        }
+
+        #close-chatbot-button:hover {
+            background-color: #fca92a;
+        }
+
+        iframe[id="chatbase-iframe"] {
+            background: transparent !important;
+            backdrop-filter: none !important;
+        }
+
         /* =================================================== */
         /* == PERBAIKAN TOTAL UNTUK RESPONSIVE == */
         /* =================================================== */
@@ -69,16 +99,12 @@
             .card-stack-container, .slide-counter {
                 display: none; /* Sembunyikan tumpukan kartu & counter */
             }
-
-            /* Jadikan slide sebagai container flexbox */
             .main-slider .swiper-slide {
                 display: flex;
                 justify-content: center; /* Horizontally center */
                 align-items: center;     /* Vertically center */
                 text-align: center;      /* Center text inside */
             }
-            
-            /* Reset posisi text-content agar dikontrol oleh flexbox */
             .text-content {
                 position: static; /* Hapus positioning absolute */
                 transform: none !important; /* Hapus semua transform */
@@ -89,12 +115,9 @@
                 opacity: 0; /* Tetap gunakan opacity untuk animasi fade-in */
                 transition: opacity 0.8s ease;
             }
-
-            /* Pastikan opacity muncul saat slide aktif */
             .swiper-slide-active .text-content {
                 opacity: 1;
             }
-
             .text-content .description,
             .progress-bar-container {
                 margin-left: auto; /* Trik untuk sentering elemen block */
@@ -129,13 +152,16 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 
+    <div id="close-chatbot-button">X</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- KODE UNTUK SLIDER ---
             const autoplayDelay = 5000;
             const cards = document.querySelectorAll('.card-stack-item');
             const totalSlides = cards.length;
 
-            // Fungsi utama untuk mengatur ulang posisi tumpukan kartu (tidak berubah)
             function updateCardStack(activeIndex) {
                 cards.forEach((card, index) => {
                     let pos = (index - activeIndex + totalSlides) % totalSlides;
@@ -143,7 +169,6 @@
                 });
             }
 
-            // Inisialisasi slider utama (background)
             const mainSlider = new Swiper('.main-slider', {
                 loop: true,
                 speed: 800,
@@ -151,21 +176,11 @@
                 fadeEffect: { crossFade: true },
                 autoplay: { delay: autoplayDelay, disableOnInteraction: false },
             });
-
-            // =====================================================================
-            // == PERUBAHAN UTAMA ADA DI SINI ==
-            // =====================================================================
+            
             mainSlider.on('slideChangeTransitionStart', function () {
-                // Dapatkan realIndex saat ini (slide yang AKAN TAMPIL)
                 const currentRealIndex = mainSlider.realIndex;
-
-                // Hitung realIndex dari slide SEBELUMNYA secara manual
-                // Ini adalah kunci perbaikannya.
                 const previousRealIndex = (currentRealIndex - 1 + totalSlides) % totalSlides;
-                
-                // Temukan kartu yang benar menggunakan previousRealIndex
                 const promotingCard = document.querySelector(`.card-stack-item[data-index="${previousRealIndex}"]`);
-
                 if (promotingCard) {
                     promotingCard.classList.add('is-promoting');
                     setTimeout(() => {
@@ -173,27 +188,65 @@
                     }, 800);
                 }
             });
-            // =====================================================================
-            // == AKHIR DARI PERUBAHAN UTAMA ==
-            // =====================================================================
-
+            
             mainSlider.on('slideChange', function () {
-                // Setiap kali slide berubah, update tumpukan kartu dan counter
                 updateCardStack(mainSlider.realIndex);
                 updateCounter();
             });
             
-            // Logika untuk counter nomor slide
             const slideCounter = document.querySelector('.current-slide');
             function updateCounter() {
-                let currentSlideIndex = mainSlider.realIndex + 1;
-                slideCounter.textContent = currentSlideIndex < 10 ? '0' + currentSlideIndex : currentSlideIndex;
+                // Perbaikan: Tambahkan pengecekan jika elemen ada
+                if (slideCounter) { 
+                    let currentSlideIndex = mainSlider.realIndex + 1;
+                    slideCounter.textContent = currentSlideIndex < 10 ? '0' + currentSlideIndex : currentSlideIndex;
+                }
             }
             
-            // Inisialisasi pertama kali
             updateCardStack(mainSlider.realIndex);
             updateCounter();
-        });
+            // --- AKHIR KODE SLIDER ---
+
+
+            // --- KODE UNTUK TOMBOL CLOSE CHATBOT ---
+            const closeBtn = document.getElementById('close-chatbot-button');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    const chatWidget = document.getElementById('chatbase-bubble-container');
+                    
+                    if (chatWidget) {
+                        chatWidget.style.display = 'none'; 
+                        closeBtn.style.display = 'none'; 
+                    } else {
+                        const chatIframe = document.querySelector('iframe[src*="chatbase.co"]');
+                        if (chatIframe) {
+                            chatIframe.style.display = 'none';
+                            closeBtn.style.display = 'none';
+                        } else {
+                            // Nonaktifkan alert agar tidak mengganggu jika user mengklik terlalu cepat
+                            console.log("Chatbot element not found yet.");
+                        }
+                    }
+                });
+            }
+            // --- AKHIR KODE CLOSE CHATBOT ---
+
+        }); // <-- AKHIR DARI BLOK DOMContentLoaded
     </script>
-</body>
+    <script>
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="EK0gD7wvnCsG2mVKF1WQ4";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
+    
+    <script>
+        window.chatbaseConfig = {
+            chatbotId: "93cfple2gp7a19f3j36p4asxr07bfb3a"
+        }
+        </script>
+        <script
+        src="https://www.chatbase.co/embed.min.js"
+        id="93cfple2gp7a19f3j36p4asxr07bfb3a"
+        defer>
+    </script>
+    </body>
 </html>
