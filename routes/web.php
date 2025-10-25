@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfilSMKNJController;
@@ -51,6 +52,8 @@ Route::get('/cek-kelulusan', [KelulusanController::class, 'showCheckForm'])->nam
 
 // Rute untuk memproses data form (saat tombol 'Cek Kelulusan' diklik)
 Route::post('/hasil-kelulusan', [KelulusanController::class, 'processCheck'])->name('hasil-kelulusan');
+
+Route::post('/ai-chat', [ChatbotController::class, 'handleChat'])->name('ai.chat');
 
 Route::get('kontak', function () {
     return view('kontak');
