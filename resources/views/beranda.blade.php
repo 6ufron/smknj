@@ -57,31 +57,40 @@
         /* --- CSS UNTUK TOMBOL CLOSE CHATBOT --- */
         #close-chatbot-button {
             position: fixed;
-            bottom: 80px;  /* Posisikan 80px dari bawah */
-            right: 15px;   /* Posisikan 15px dari kanan */
-            width: 25px;
-            height: 25px;
-            background-color: #FEA116; /* Warna oranye (sesuai tema) */
-            color: #0F172B; /* Warna teks gelap (sesuai tema) */
+            bottom: 80px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background-color: #FEA116;
+            color: #0F172B;
             border-radius: 50%;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 2147483647; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2147483647;
+            transition: all 0.3s ease;
         }
 
         #close-chatbot-button:hover {
-            background-color: #fca92a;
+            background-color: #e6890e;
+            transform: scale(1.1);
         }
 
-        iframe[id="chatbase-iframe"] {
-            background: transparent !important;
-            backdrop-filter: none !important;
+        #close-chatbot-button.show {
+            display: flex;
+        }
+
+        /* STYLE UNTUK CHATBOT YANG DITUTUP */
+        .chatbot-minimized {
+            /* Biarkan chatbot tetap ada tapi dalam state minimized */
+            transform: translateY(100%) !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
         }
 
         /* =================================================== */
@@ -97,22 +106,22 @@
         /* Untuk Ponsel (di bawah 768px) - METODE FLEXBOX */
         @media (max-width: 768px) {
             .card-stack-container, .slide-counter {
-                display: none; /* Sembunyikan tumpukan kartu & counter */
+                display: none;
             }
             .main-slider .swiper-slide {
                 display: flex;
-                justify-content: center; /* Horizontally center */
-                align-items: center;     /* Vertically center */
-                text-align: center;      /* Center text inside */
+                justify-content: center;
+                align-items: center;
+                text-align: center;
             }
             .text-content {
-                position: static; /* Hapus positioning absolute */
-                transform: none !important; /* Hapus semua transform */
+                position: static;
+                transform: none !important;
                 left: auto;
                 top: auto;
                 width: 90%;
                 max-width: 400px;
-                opacity: 0; /* Tetap gunakan opacity untuk animasi fade-in */
+                opacity: 0;
                 transition: opacity 0.8s ease;
             }
             .swiper-slide-active .text-content {
@@ -120,8 +129,17 @@
             }
             .text-content .description,
             .progress-bar-container {
-                margin-left: auto; /* Trik untuk sentering elemen block */
+                margin-left: auto;
                 margin-right: auto;
+            }
+            
+            /* Penyesuaian tombol close untuk mobile */
+            #close-chatbot-button {
+                bottom: 70px;
+                right: 10px;
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
         }
     </style>
@@ -143,6 +161,9 @@
     
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
+    <!-- TOMBOL CLOSE CHATBOT -->
+    <div id="close-chatbot-button" title="Tutup Chatbot">✕</div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('lib/wow/wow.min.js') }}"></script>
@@ -151,8 +172,6 @@
     <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-
-    <div id="close-chatbot-button">X</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -196,7 +215,6 @@
             
             const slideCounter = document.querySelector('.current-slide');
             function updateCounter() {
-                // Perbaikan: Tambahkan pengecekan jika elemen ada
                 if (slideCounter) { 
                     let currentSlideIndex = mainSlider.realIndex + 1;
                     slideCounter.textContent = currentSlideIndex < 10 ? '0' + currentSlideIndex : currentSlideIndex;
@@ -210,30 +228,199 @@
 
             // --- KODE UNTUK TOMBOL CLOSE CHATBOT ---
             const closeBtn = document.getElementById('close-chatbot-button');
-            
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function() {
-                    const chatWidget = document.getElementById('chatbase-bubble-container');
-                    
-                    if (chatWidget) {
-                        chatWidget.style.display = 'none'; 
-                        closeBtn.style.display = 'none'; 
-                    } else {
-                        const chatIframe = document.querySelector('iframe[src*="chatbase.co"]');
-                        if (chatIframe) {
-                            chatIframe.style.display = 'none';
-                            closeBtn.style.display = 'none';
-                        } else {
-                            // Nonaktifkan alert agar tidak mengganggu jika user mengklik terlalu cepat
-                            console.log("Chatbot element not found yet.");
+            let chatbotObserver = null;
+            let isChatbotMinimized = false;
+
+            // Fungsi untuk mendeteksi bubble button chatbot (tombol buka chatbot)
+            function findChatbotBubble() {
+                const bubbleSelectors = [
+                    '#chatbase-bubble-container',
+                    '[class*="bubble"]',
+                    '[class*="chat"] button',
+                    '[aria-label*="chat"]',
+                    '[title*="chat"]'
+                ];
+                
+                for (let selector of bubbleSelectors) {
+                    const element = document.querySelector(selector);
+                    if (element && element.offsetParent !== null) {
+                        return element;
+                    }
+                }
+                return null;
+            }
+
+            // Fungsi untuk mendeteksi chat window (room chat yang terbuka)
+            function findChatWindow() {
+                const windowSelectors = [
+                    'iframe[src*="chatbase.co"]',
+                    '[class*="window"]',
+                    '[class*="modal"]',
+                    '[class*="popup"]',
+                    '[role*="dialog"]'
+                ];
+                
+                for (let selector of windowSelectors) {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        const style = window.getComputedStyle(element);
+                        if (style.display !== 'none' && style.visibility !== 'hidden') {
+                            return element;
                         }
                     }
+                }
+                return null;
+            }
+
+            // Fungsi untuk minimize chatbot window
+            function minimizeChatbot() {
+                const chatWindow = findChatWindow();
+                const chatBubble = findChatbotBubble();
+                
+                if (chatWindow) {
+                    // Minimize chat window dengan CSS
+                    chatWindow.classList.add('chatbot-minimized');
+                    chatWindow.style.transform = 'translateY(100%)';
+                    chatWindow.style.opacity = '0';
+                    chatWindow.style.visibility = 'hidden';
+                }
+                
+                // Pastikan bubble button tetap visible
+                if (chatBubble) {
+                    chatBubble.style.display = 'block';
+                    chatBubble.style.visibility = 'visible';
+                    chatBubble.style.opacity = '1';
+                }
+                
+                // Sembunyikan tombol close
+                closeBtn.classList.remove('show');
+                isChatbotMinimized = true;
+                
+                console.log("Chatbot diminimize");
+            }
+
+            // Fungsi untuk menampilkan tombol close ketika chat window terbuka
+            function checkChatbotState() {
+                const chatWindow = findChatWindow();
+                const chatBubble = findChatbotBubble();
+                
+                if (chatWindow && !isChatbotMinimized) {
+                    // Chat window terbuka, tampilkan tombol close
+                    closeBtn.classList.add('show');
+                } else if (!chatWindow || isChatbotMinimized) {
+                    // Chat window tertutup, sembunyikan tombol close
+                    closeBtn.classList.remove('show');
+                }
+                
+                // Reset blur effect jika ada
+                if (document.body.style.backdropFilter || document.body.style.filter) {
+                    document.body.style.backdropFilter = 'none';
+                    document.body.style.webkitBackdropFilter = 'none';
+                    document.body.style.filter = 'none';
+                }
+            }
+
+            // Observer untuk memantau perubahan state chatbot
+            function startChatbotObserver() {
+                chatbotObserver = new MutationObserver(function(mutations) {
+                    let shouldCheck = false;
+                    
+                    mutations.forEach(mutation => {
+                        // Cek perubahan pada atribut style atau class
+                        if (mutation.type === 'attributes' && 
+                            (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                            shouldCheck = true;
+                        }
+                        
+                        // Cek penambahan/penghapusan node
+                        if (mutation.type === 'childList') {
+                            mutation.addedNodes.forEach(node => {
+                                if (node.nodeType === 1 && (
+                                    node.id?.includes('chatbase') || 
+                                    node.className?.includes('chat') ||
+                                    node.src?.includes('chatbase.co')
+                                )) {
+                                    shouldCheck = true;
+                                }
+                            });
+                        }
+                    });
+                    
+                    if (shouldCheck) {
+                        setTimeout(checkChatbotState, 100);
+                    }
+                });
+
+                chatbotObserver.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['style', 'class', 'id']
                 });
             }
+
+            // Event listener untuk tombol close
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    minimizeChatbot();
+                });
+            }
+
+            // Event listener untuk memastikan bubble button bisa diklik
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                const chatBubble = findChatbotBubble();
+                
+                // Jika yang diklik adalah bubble button, reset state
+                if (chatBubble && (chatBubble.contains(target) || chatBubble === target)) {
+                    isChatbotMinimized = false;
+                    setTimeout(checkChatbotState, 500);
+                }
+            });
+
+            // Mulai observer setelah halaman dimuat
+            setTimeout(() => {
+                checkChatbotState();
+                startChatbotObserver();
+                
+                // Cek secara periodik (fallback)
+                const intervalCheck = setInterval(() => {
+                    checkChatbotState();
+                }, 2000);
+                
+                // Hentikan interval setelah 30 detik
+                setTimeout(() => {
+                    clearInterval(intervalCheck);
+                }, 30000);
+            }, 3000);
+
+            // Reset state ketika user berinteraksi dengan halaman
+            window.addEventListener('click', function() {
+                setTimeout(checkChatbotState, 100);
+            });
+
             // --- AKHIR KODE CLOSE CHATBOT ---
 
-        }); // <-- AKHIR DARI BLOK DOMContentLoaded
+        });
+
+        // Fallback global untuk mencegah blur effect
+        const style = document.createElement('style');
+        style.textContent = `
+            body {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                filter: none !important;
+            }
+            [class*="backdrop"] {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
+
+    <!-- SCRIPT CHATBASE - PASTIKAN INI DIEKSEKUSI NORMAL -->
     <script>
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="EK0gD7wvnCsG2mVKF1WQ4";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
@@ -242,11 +429,11 @@
         window.chatbaseConfig = {
             chatbotId: "93cfple2gp7a19f3j36p4asxr07bfb3a"
         }
-        </script>
-        <script
+    </script>
+    <script
         src="https://www.chatbase.co/embed.min.js"
         id="93cfple2gp7a19f3j36p4asxr07bfb3a"
         defer>
     </script>
-    </body>
+</body>
 </html>

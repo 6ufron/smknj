@@ -39,8 +39,8 @@
             </div>
 
             <a href="{{ route('berita-sekolah') }}" class="nav-item nav-link {{ Request::routeIs('berita-sekolah') ? 'active' : '' }}">Berita</a>
-            <a href="#" class="nav-item nav-link">Pengumuman</a>
-            <a href="#" class="nav-item nav-link">Download</a>
+            <a href="{{ route('pengumuman') }}" class="nav-item nav-link">Pengumuman</a>
+            <a href="{{ route('download') }}" class="nav-item nav-link">Download</a>
             <a href="{{ route('kontak_kami') }}" class="nav-item nav-link {{ Request::routeIs('kontak_kami') ? 'active' : '' }}">Kontak</a>
             <a href="{{ route('ppdb') }}" class="nav-item nav-link special-link">PPDB</a>
         </div>
