@@ -3,45 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// Nanti Anda akan panggil Model Anda di sini
-// use App\Models\Pengumuman; 
-// use App\Models\Dokumen;
+use App\Models\Pengumuman; // Panggil model Pengumuman
 
 class PageController extends Controller
 {
     public function pengumuman(Request $request)
     {
-        // Ganti bagian ini untuk mengambil data asli dari database
-        // $query = Pengumuman::query();
+        $query = Pengumuman::query()
+                    ->where('is_published', true) // Hanya tampilkan yang sudah terbit
+                    ->whereDate('published_at', '<=', now()); // Hanya tampilkan yang tanggal terbitnya sudah lewat
 
-        // // Logika untuk search
-        // if ($request->has('search')) {
-        //     $query->where('title', 'like', '%' . $request->search . '%');
-        // }
+        // Logika untuk search
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('content', 'like', '%' . $request->search . '%'); // Cari juga di konten
+        }
 
-        // $data = $query->orderBy('date', 'desc')->paginate(9);
+        // Ambil data, urutkan terbaru, dan gunakan pagination
+        $pengumumans = $query->orderBy('published_at', 'desc')->paginate(6); // Tampilkan 6 per halaman
 
-        // return view('pengumuman', ['pengumuman' => $data]);
-        
-        // Untuk saat ini, kita return view-nya saja
-        return view('pengumuman');
+        return view('pengumuman', ['pengumumans' => $pengumumans]); // Kirim data ke view
     }
 
+    // ... (method download Anda) ...
     public function download(Request $request)
     {
-        // Ganti bagian ini untuk mengambil data asli dari database
-        // $query = Dokumen::query();
-
-        // // Logika untuk search
-        // if ($request->has('search')) {
-        //     $query->where('title', 'like', '%' . $request->search . '%');
-        // }
-
-        // $data = $query->orderBy('created_at', 'desc')->paginate(10);
-
-        // return view('download', ['dokumen' => $data]);
-        
-        // Untuk saat ini, kita return view-nya saja
+        // ...
         return view('download');
     }
 }

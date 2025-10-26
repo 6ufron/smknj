@@ -42,6 +42,9 @@
             <a href="{{ route('pengumuman') }}" class="nav-item nav-link">Pengumuman</a>
             <a href="{{ route('download') }}" class="nav-item nav-link">Download</a>
             <a href="{{ route('kontak_kami') }}" class="nav-item nav-link {{ Request::routeIs('kontak_kami') ? 'active' : '' }}">Kontak</a>
+            <a href="#" id="navbar-chatbot-toggle" class="nav-item nav-link">
+                <i class="fas fa-robot me-1"></i> Chatbot 
+            </a>
             <a href="{{ route('ppdb') }}" class="nav-item nav-link special-link">PPDB</a>
         </div>
     </div>

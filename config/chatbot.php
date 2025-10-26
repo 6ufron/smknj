@@ -89,9 +89,6 @@ return [
         **Kontak:**
         * Telepon/WA: +62 812-5907-5405
         * Email: smknurja.paiton@gmail.com
-
-        **Prestasi:**
-        (Sebutkan beberapa prestasi terbaru atau yang paling membanggakan jika ada, contoh: Juara LKS tingkat Kabupaten/Provinsi, Juara lomba Robotika Nasional, dll).
     "
 ];
 

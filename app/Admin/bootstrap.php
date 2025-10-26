@@ -19,3 +19,18 @@
  */
 
 OpenAdmin\Admin\Form::forget(['editor']);
+
+use OpenAdmin\Admin\Facades\Admin; // Pastikan ini ada
+use OpenAdmin\Admin\Form;
+
+Form::forget(['editor']);
+
+// Contoh menu lain yang mungkin sudah ada
+// Admin::menu()->add('Dashboard', '/admin')->icon('fa-dashboard');
+// Admin::menu()->add('Users', 'auth/users')->icon('fa-users');
+
+// TAMBAHKAN BARIS INI:
+// Admin::menu()->add('Pengumuman', 'pengumumans.index')->icon('fa-bullhorn'); 
+
+// Contoh menu lain setelahnya
+// Admin::menu()->add('Galeri', 'galeris.index')->icon('fa-image');

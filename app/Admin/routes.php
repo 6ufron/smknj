@@ -13,6 +13,7 @@ use App\Admin\Controllers\LayananController;
 use App\Admin\Controllers\ProfilSekolahController;
 use App\Admin\Controllers\UserController;
 use App\Admin\Controllers\VimisiController;
+use App\Admin\Controllers\PengumumanController;
 
 use Illuminate\Support\Facades\Route; // ✅ perbaikan di sini
 use OpenAdmin\Admin\Facades\Admin;
@@ -39,4 +40,5 @@ Route::group([
     $router->resource('ekstrakurikulers', EkstrakurikulerController::class);
     $router->resource('gafotos', GafotoController::class);
     $router->resource('alumnis', AlumniController::class);
+    Route::resource('pengumumans', PengumumanController::class);
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\ChatbotController;
+use App\Admin\Controllers\JurusanController;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfilSMKNJController;
@@ -30,6 +31,7 @@ Route::get('visi-misi-smknj', [ProfilSMKNJController::class, 'vimisi'])->name('s
 Route::get('identitas-smknj', [ProfilSMKNJController::class, 'identitas'])->name('smknj.identitas');
 
 Route::get('program-keahlian', [ProgramSMKNJController::class, 'keahlian'])->name('program.keahlian');
+Route::get('/admin/konsentrasikeahlian', [JurusanController::class, 'index'])->name('admin.konsentrasi.index');
 
 // alumni
 Route::get('alumni-smknj', [AlumniSmkController::class, 'tracer_study'])->name('alumni');

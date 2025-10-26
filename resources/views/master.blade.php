@@ -346,6 +346,39 @@
                 chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll ke bawah
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chatbot-container');
+            const chatBox = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSendBtn = document.getElementById('chat-send');
+            const toggleBtn = document.getElementById('chatbot-toggle-button'); // Tombol bulat
+            const closeBtn = document.getElementById('chatbot-close-btn');     // Tombol X di header
+            const navbarToggleBtn = document.getElementById('navbar-chatbot-toggle'); // <<< Link di Navbar
+
+            // Fungsi untuk membuka chatbox
+            function openChatbox(event) {
+                if (event) event.preventDefault(); // Mencegah link navbar pindah halaman
+                if(chatContainer) chatContainer.style.display = 'flex';
+                if(toggleBtn) toggleBtn.style.display = 'none'; // Sembunyikan tombol bulat jika ada
+                if(chatInput) chatInput.focus();
+            }
+
+            // Fungsi untuk menutup chatbox
+            function closeChatbox() {
+                if(chatContainer) chatContainer.style.display = 'none';
+                if(toggleBtn) toggleBtn.style.display = 'block'; // Tampilkan lagi tombol bulat jika ada
+            }
+            
+            // Event listener
+            if(toggleBtn) toggleBtn.addEventListener('click', openChatbox); // Tombol bulat tetap bisa buka
+            if(closeBtn) closeBtn.addEventListener('click', closeChatbox);
+            if(navbarToggleBtn) navbarToggleBtn.addEventListener('click', openChatbox); // <<< INI YANG MEMBUAT LINK NAVBAR BERFUNGSI
+
+            // ... (sisa kode sendMessage dan appendMessage) ...
+             async function sendMessage() { /* ... */ }
+             function appendMessage(sender, text) { /* ... */ }
+        });
     </script>
     {{-- AKHIR JAVASCRIPT CHATBOT --}}
 
