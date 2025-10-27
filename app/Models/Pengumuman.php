@@ -15,7 +15,7 @@ class Pengumuman extends Model
      *
      * @var string
      */
-    protected $table = 'pengumumans'; // <-- TAMBAHKAN BARIS INI
+    protected $table = 'pengumuman'; // <-- TAMBAHKAN BARIS INI
 
     // Kolom yang boleh diisi massal
     protected $fillable = [

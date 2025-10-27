@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengumuman; // Panggil model Pengumuman
 
-class PageController extends Controller
+class PengumumanController extends Controller
 {
     public function pengumuman(Request $request)
     {

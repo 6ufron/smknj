@@ -7,4 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Jurusan extends Model
 {
     protected $table = 'program_keahlian';
+    
+    protected $fillable = [
+        'nama',
+        'singkatan',
+        'deskripsi',
+        'foto',
+    ];
 }

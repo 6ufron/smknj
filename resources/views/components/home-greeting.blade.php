@@ -4,7 +4,10 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                 {{-- Struktur gambar disederhanakan untuk mencegah pemotongan --}}
-                <img class="img-fluid w-100" src="{{ asset('img/kepsek.png') }}" alt="Foto Kepala Sekolah {{ $k->nama }}" style="border-radius: 25px;">
+                <img class="img-fluid w-100"
+                    src="{{ $k->foto ? asset('storage/'.$k->foto) : asset('img/default_kepsek.png') }}"
+                    alt="Foto Kepala Sekolah {{ $k->nama }}"
+                    style="border-radius:25px;">
             </div>
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
                 <h6 class="section-title bg-white text-start text-primary pe-3">Sambutan</h6>

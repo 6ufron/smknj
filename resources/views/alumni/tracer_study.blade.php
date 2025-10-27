@@ -67,10 +67,10 @@
                                 <td scope="row">{{ ($alumni->currentPage() - 1) * $alumni->perPage() + $loop->iteration }}</td>
                                 <td>{{ $a->nama }}</td>
                                 <td>{{ $a->jurusan }}</td>
-                                @if ($a->status_hadir == NULL)
+                                @if ($a->status == NULL)
                                 <td>Belum Mengisi</td>
                                 @else
-                                <td>{{ $a->status_hadir }}</td>
+                                <td>{{ $a->status }}</td>
                                 @endif
                                 <td>
                                     <a href="{{ route('change_status', $a->id) }}" class="btn btn-warning"><i class="fa fa-eye"></i> Edit</a>

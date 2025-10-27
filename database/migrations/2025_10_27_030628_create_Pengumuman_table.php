@@ -1,15 +1,19 @@
 <?php
 
-// database/migrations/xxxx_xx_xx_xxxxxx_create_pengumumans_table.php
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
+class CreatePengumumanTable extends Migration
 {
-    public function up(): void
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
     {
-        Schema::create('pengumumans', function (Blueprint $table) {
+        Schema::create('Pengumuman', function (Blueprint $table) {
             $table->id();
             $table->string('title'); // Judul pengumuman
             $table->text('content'); // Isi lengkap pengumuman (bisa HTML)
@@ -20,8 +24,13 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+     public function down(): void
     {
-        Schema::dropIfExists('pengumumans');
+        Schema::dropIfExists('Pengumuman');
     }
-};
+}

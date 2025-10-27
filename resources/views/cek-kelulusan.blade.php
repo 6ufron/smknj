@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <!-- Header Halaman End -->
 
     <!-- Form Cek Kelulusan Start -->

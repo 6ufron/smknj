@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="card">
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Status Pekerjaan / Kuliah</h4>
@@ -106,9 +106,9 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-                    <div id="kuliah-fields">
+                    {{-- <div id="kuliah-fields">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="card">
@@ -153,8 +153,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="bekerja-fields">
+                    </div> --}}
+                    {{-- <div id="bekerja-fields">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="card">
@@ -191,16 +191,16 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row mt-3 justify-content-center">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Status Kehadiran</h4>
-                                    <select class="form-select" name="status_hadir" id="status_hadir" required>
-                                        <option value="Hadir" {{ $alumni->status_hadir === 'Hadir' ? 'selected' : '' }}>Hadir
+                                    <select class="form-select" name="status" id="status" required>
+                                        <option value="Hadir" {{ $alumni->status === 'Hadir' ? 'selected' : '' }}>Hadir
                                         </option>
-                                        <option value="Tidak Hadir" {{ $alumni->status_hadir === 'Tidak Hadir' ? 'selected' : '' }}>Tidak
+                                        <option value="Tidak Hadir" {{ $alumni->status === 'Tidak Hadir' ? 'selected' : '' }}>Tidak
                                             Hadir</option>
                                     </select>
                                     <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#nisnModal">

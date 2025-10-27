@@ -49,8 +49,8 @@ class ChatbotController extends Controller
         // Akhir dari $systemPrompt
         
         // Gabungkan prompt sistem, data, dan pertanyaan user
-        // $fullPrompt = $systemPrompt . "\n" . $userMessage; 
-        $fullPrompt = $userMessage; // HANYA PESAN USER UNTUK TES
+        $fullPrompt = $systemPrompt . "\n" . $userMessage; 
+        // $fullPrompt = $userMessage; // HANYA PESAN USER UNTUK TES
         
         // --- Panggilan ke API MhCloud ---
         try {

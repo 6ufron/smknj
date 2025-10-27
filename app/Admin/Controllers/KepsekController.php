@@ -65,12 +65,15 @@ class KepsekController extends AdminController
     {
         $form = new Form(new Kepsek());
 
-        $form->text('nama', __('Nama'));
-        $form->image('foto', 'Foto')
-            ->move('images/kepala_sekolah')
+        $form->text('nama', __('Nama'))->required();
+
+        $form->image('foto', __('Foto'))
             ->uniqueName()
+            ->dir('kepsek') // Storage path: storage/app/public/kepsek
+            ->required()
             ->rules('mimes:jpeg,jpg,png|max:2048');
-        $form->text('masa_jabatan', __('Masa jabatan'));
+
+        $form->text('masa_jabatan', __('Masa Jabatan'))->required();
 
         return $form;
     }

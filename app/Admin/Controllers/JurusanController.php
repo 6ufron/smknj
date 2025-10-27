@@ -30,7 +30,12 @@ class JurusanController extends AdminController
         $grid->column('nama', __('Nama'));
         $grid->column('singkatan', __('Singkatan'));
         $grid->column('deskripsi', __('Deskripsi'));
-        $grid->column('foto', __('Foto'));
+        $grid->column('foto', 'Foto')
+            ->display(function ($foto) {
+                if (!$foto) return 'Tidak ada foto';
+                return "<img src='/storage/{$foto}' width='60' />";
+            });
+
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -51,7 +56,7 @@ class JurusanController extends AdminController
         $show->field('nama', __('Nama'));
         $show->field('deskripsi', __('Deskripsi'));
         $show->field('singkatan', __('Singkatan'));
-        $show->field('foto', __('Foto'));
+        $show->field('foto', __('Foto'))->image('/storage/', 200);
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -70,7 +75,10 @@ class JurusanController extends AdminController
         $form->text('nama', __('Nama'));
         $form->text('singkatan', __('Singkatan'));
         $form->textarea('deskripsi', __('Deskripsi'));
-        $form->image('foto', 'Foto');
+        $form->image('foto', __('Foto'))
+            ->uniqueName()
+            ->dir('jurusan')
+            ->rules('mimes:jpeg,jpg,png|max:2048');
 
         return $form;
     }

@@ -185,7 +185,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            // --- KODE UNTUK SLIDER ---
+            // --- KODE SLIDER ---
             const autoplayDelay = 5000;
             const cards = document.querySelectorAll('.card-stack-item');
             // Tambahkan pengecekan jika cards ada sebelum menghitung length

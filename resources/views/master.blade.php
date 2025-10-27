@@ -3,189 +3,221 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title') - SMK Nurul Jadid</title> {{-- Tambahkan nama sekolah untuk SEO --}}
+    <title>@yield('title') - SMK Nurul Jadid</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
-    {{-- PENTING: Tambahkan CSRF Token untuk AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="{{ asset('img/logo.png') }}" rel="icon">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    {{-- PERBAIKAN FONT: Gunakan Poppins sesuai halaman lain --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> {{-- Use 5.15.4 for fas fa-bars --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
     <link href="{{ asset('lib/animate/animate.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /> {{-- Jika Anda pakai Swiper di halaman lain --}}
-
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-    {{-- TAMBAHKAN CSS UNTUK CHATBOT DI SINI --}}
     <style>
-        /* PERBAIKAN FONT: Terapkan Poppins ke body */
+        /* == CSS CHATBOT == */
+        :root {
+             --primary: #06A3DA; /* Sesuaikan warna primer Anda */
+        }
         body {
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Styling Dasar Chatbot */
-        #chatbot-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 320px; /* Lebar chatbox */
-            max-width: 90%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            z-index: 1050; /* Pastikan di atas elemen lain */
-            font-size: 0.9rem; /* Ukuran font chat */
+        /* Wrapper Utama */
+        #chatbot-wrapper {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 600px; height: 450px; /* Lebar total awal (Sidebar 180 + Chat 420) */
+            max-width: 95%; max-height: 80vh;
+            background-color: #f8f9fa;
+            border-radius: 10px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            overflow: hidden; display: none; /* Awalnya disembunyikan */
+            flex-direction: row; z-index: 1050;
+            transition: width 0.3s ease-in-out; /* Animasi perubahan lebar wrapper */
         }
-        #chatbot-header {
-            background-color: var(--primary); /* Warna primer template Anda */
-            color: white;
-            padding: 10px 15px;
+
+        /* Sidebar History (Tema Terang) */
+        #chatbot-sidebar {
+            width: 180px; /* Lebar awal */
+            background-color: #f1f3f5; /* Warna background terang */
+            color: #495057; /* Warna teks gelap */
+            padding: 15px; display: flex; flex-direction: column;
+            border-right: 1px solid #dee2e6; /* Border terang */
+            font-size: 0.85rem; flex-shrink: 0;
+            transition: width 0.3s ease-in-out, padding 0.3s ease-in-out; /* Transisi lebar & padding */
+            position: relative;
+            overflow: hidden; /* Sembunyikan konten saat menyempit */
+        }
+
+        /* Tombol Toggle Sidebar */
+        #sidebar-toggle-button {
+            background: none; border: 1px solid #ced4da; color: #495057;
+            padding: 5px 8px; border-radius: 5px; cursor: pointer;
+            position: absolute; /* Posisi di kanan atas */
+            top: 10px; right: 10px; z-index: 2;
+            transition: background-color 0.2s ease, color 0.2s ease, right 0.3s ease-in-out, top 0.3s ease-in-out, position 0s linear 0.3s; /* Transisi */
+        }
+        #sidebar-toggle-button:hover { background-color: #e9ecef; color: #212529; }
+
+        /* Konten Sidebar */
+        #new-chat-button, #chat-history-list {
+            /* Transisi fade out/in */
+            transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styling untuk judul sidebar */
+        .sidebar-title {
+            color: #5b5b5b; /* Warna putih */
+            text-align: left; /* Tengah */
             font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #chatbot-header {
-            background-color: var(--primary); 
-            color: white;
-            padding: 8px 15px; /* Sedikit kurangi padding vertikal */
-            font-weight: 600;
-            display: flex; /* Aktifkan flexbox */
-            justify-content: space-between; /* Nama di kiri, tombol X di kanan */
-            align-items: center; /* Ratakan vertikal */
-        }
-
-        /* Styling untuk profile (foto + nama) */
-        .chatbot-profile {
-            display: flex; /* Aktifkan flexbox untuk foto dan nama */
-            align-items: center; /* Ratakan vertikal */
-        }
-
-        .chatbot-avatar {
-            width: 30px; /* Ukuran foto profil */
-            height: 30px;
-            border-radius: 50%; /* Buat jadi bulat */
-            margin-right: 10px; /* Jarak antara foto dan nama */
-            object-fit: cover; /* Pastikan gambar terisi rapi */
-            border: 1px solid rgba(255, 255, 255, 0.5); /* Optional: border tipis */
-        }
-        
-        #chatbot-close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.4rem; /* Sedikit perbesar tombol X */
-            cursor: pointer;
-            padding: 0 5px; /* Beri sedikit area klik */
-            line-height: 1; /* Hapus spasi ekstra di tombol X */
-        }
-
-        /* Ubah nama bot di pesan */
-        #chat-messages p strong { 
-             color: var(--primary);
-             display: block; 
-             margin-bottom: 2px;
-             font-size: 0.8em;
-        }
-        #chatbot-close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        #chat-messages {
-            height: 300px; /* Tinggi area pesan */
-            overflow-y: auto; /* Aktifkan scroll jika pesan panjang */
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background-color: #f9f9f9;
-        }
-        #chat-messages p {
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-        #chat-messages p strong { /* Nama pengirim */
-             color: var(--primary);
-             display: block; /* Agar nama di baris sendiri */
-             margin-bottom: 2px;
-             font-size: 0.8em;
-        }
-        #chatbot-input-area {
-            display: flex;
-            border-top: 1px solid #eee;
-        }
-        #chat-input {
-            flex-grow: 1;
-            border: none;
-            padding: 12px 15px;
-            outline: none; /* Hilangkan border saat diklik */
-        }
-        #chat-send {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 18px;
-            cursor: pointer;
+            margin-top: 0px; /* Sedikit jarak atas */
+            margin-bottom: 0px; /* Jarak ke tombol New Chat */
             font-size: 1rem;
+            /* Pastikan terlihat saat sidebar normal */
+             transition: opacity 0.2s ease-out 0.1s, visibility 0.2s ease-out 0.1s;
+             opacity: 1;
+             visibility: visible;
         }
-         #chat-send:disabled {
-             background-color: #ccc;
-             cursor: not-allowed;
-         }
-        /* Tombol Toggle Chatbot (Ikon Bulat) */
-         #chatbot-toggle-button {
-             position: fixed;
-             bottom: 20px;
-             right: 20px;
-             width: 50px;
-             height: 50px;
-             background-color: var(--primary);
-             color: white;
-             border-radius: 50%;
-             border: none;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             font-size: 1.5rem;
-             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-             cursor: pointer;
-             z-index: 1049; /* Sedikit di bawah chatbox */
+
+        /* Logo di sidebar */
+        .sidebar-logo {
+            height: 22px; /* Sesuaikan ukuran logo */
+            width: auto;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        #new-chat-button {
+            width: calc(100% - 40px); /* Beri ruang untuk tombol toggle di atasnya */
+            margin-top: 25px;
+            border-color: #ced4da; color: #495057; background-color: white;
+        }
+
+        /* Sembunyikan judul saat sidebar collapsed */
+        #chatbot-wrapper.sidebar-hidden .sidebar-title {
+            opacity: 0;
+            visibility: hidden;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            transition-delay: 0s;
+        }
+
+        #new-chat-button:hover { background-color: #e9ecef; color: #212529; }
+        #chat-history-list { flex-grow: 1; overflow-y: auto; margin-top: 15px; }
+        .history-item { /* Style history */
+             padding: 8px 10px; margin-bottom: 5px; border-radius: 5px;
+             cursor: pointer; white-space: nowrap; overflow: hidden;
+             text-overflow: ellipsis; transition: background-color 0.2s ease; color: #495057;
+        }
+        .history-item:hover { background-color: #e9ecef; color: #212529; }
+        .history-item.active { background-color: var(--primary); color: white; font-weight: 500; }
+
+        /* State Sidebar Disembunyikan (Collapsed) */
+        #chatbot-wrapper.sidebar-hidden {
+            width: 470px; /* Lebar wrapper = lebar kontainer chat (420) + lebar sidebar collapsed (50) */
+        }
+        #chatbot-wrapper.sidebar-hidden #chatbot-sidebar {
+            width: 50px; /* Lebar sidebar menyempit */
+            padding-left: 5px; padding-right: 5px; /* Padding lebih kecil */
+            border-right-color: transparent; /* Sembunyikan border */
+            background-color: #f1f3f5; 
+        }
+        #chatbot-wrapper.sidebar-hidden #sidebar-toggle-button {
+             position: static; 
+             margin: 5px auto 15px auto; /* Tengah */
+             align-self: center;
+             display: block; /* Pastikan terlihat */
+             
+        }
+        #chatbot-wrapper.sidebar-hidden #new-chat-button,
+        #chatbot-wrapper.sidebar-hidden #chat-history-list {
+            opacity: 0; visibility: hidden; height: 0; margin: 0; padding: 0; /* Sembunyikan total */
+            transition-delay: 0s; /* Hilang langsung */
+        }
+
+        /* Kontainer Chat Utama */
+        #chatbot-container {
+            width: 420px; /* Lebar kontainer chat tetap */
+            flex-grow: 1; display: flex; flex-direction: column; background-color: white;
+            flex-shrink: 0;
+            /* Tidak perlu transisi margin */
+        }
+
+        /* Header Chat */
+        #chatbot-header {
+            background-color: var(--primary); color: white; padding: 8px 15px;
+            font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+            flex-shrink: 0;
+        }
+        .chatbot-profile { display: flex; align-items: center; }
+        .chatbot-avatar {
+            width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;
+            object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        #chatbot-close-btn {
+            background: none; border: none; color: white; font-size: 1.4rem;
+            cursor: pointer; padding: 0 5px; line-height: 1;
+        }
+
+        /* Area Pesan */
+        #chat-messages {
+            flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f9f9f9; height: auto;
+        }
+        #chat-messages p { margin-bottom: 10px; line-height: 1.4; font-size: 0.9rem;}
+        #chat-messages p strong { color: var(--primary); display: block; margin-bottom: 2px; font-size: 0.8em; }
+
+        /* Area Input */
+        #chatbot-input-area { display: flex; border-top: 1px solid #eee; flex-shrink: 0; }
+        #chat-input { flex-grow: 1; border: none; padding: 12px 15px; outline: none; }
+        #chat-send {
+            background-color: var(--primary); color: white; border: none;
+            padding: 0 18px; cursor: pointer; font-size: 1rem;
+        }
+        #chat-send:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* Tombol Toggle Bulat */
+        #chatbot-toggle-button {
+             position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
+             background-color: var(--primary); color: white; border-radius: 50%; border: none;
+             display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+             box-shadow: 0 2px 10px rgba(0,0,0,0.2); cursor: pointer; z-index: 1049;
              transition: transform 0.3s ease;
          }
-         #chatbot-toggle-button:hover {
-             transform: scale(1.1);
+         #chatbot-toggle-button:hover { transform: scale(1.1); }
+
+         /* Responsive */
+         @media (max-width: 768px) {
+            #chatbot-wrapper {
+                width: calc(100% - 30px); height: 75vh; right: 15px; bottom: 15px;
+                /* Pastikan sidebar-hidden class tidak aktif di mobile jika sidebar disembunyikan total */
+                &.sidebar-hidden { width: calc(100% - 30px); } 
+            }
+             #chatbot-sidebar, #sidebar-toggle-button {
+                 display: none; /* Sembunyikan sidebar & tombolnya di mobile */
+             }
+             #chatbot-container {
+                 width: 100%; /* Kontainer chat ambil lebar penuh di mobile */
+             }
+            #chatbot-toggle-button { width: 45px; height: 45px; font-size: 1.3rem;}
          }
-         /* Sembunyikan container chatbox awalnya */
-         #chatbot-container {
-             display: none;
-         }
+        /* == AKHIR CSS CHATBOT == */
     </style>
 
-    @stack('styles') {{-- Untuk menambahkan CSS spesifik per halaman jika perlu --}}
+    @stack('styles')
 
 </head>
 
 <body>
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items: center justify-content-center">
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -209,37 +241,49 @@
         </div>
     </div>
 
-    {{-- KONTEN UTAMA HALAMAN --}}
-    @yield('content')
+    @yield('content') {{-- KONTEN UTAMA HALAMAN --}}
 
     @include('components/footer')
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-    {{-- TAMBAHKAN HTML CHATBOT DI SINI --}}
-    <button id="chatbot-toggle-button">
-        <i class="fas fa-comments"></i> {{-- Ganti ikon jika perlu --}}
-    </button>
-    
-    <div id="chatbot-container">
-        <div id="chatbot-header">
-            {{-- Tambahkan div untuk foto dan nama --}}
-            <div class="chatbot-profile"> 
-                <img src="{{ asset('img/logo.png') }}" alt="SMKNJ Bot" class="chatbot-avatar"> {{-- Ganti path jika perlu --}}
-                <span>SMKNJ Bot</span> {{-- Nama bot --}}
+    {{-- == HTML CHATBOT NJ-BOT (DENGAN SIDEBAR & TOGGLE) == --}}
+    <button id="chatbot-toggle-button"> <i class="fas fa-comments"></i> </button>
+    <div id="chatbot-wrapper"> {{-- Awalnya display: none; --}}
+        <div id="chatbot-sidebar">
+            <button id="sidebar-toggle-button" title="Toggle Sidebar">
+                <i class="fas fa-bars"></i> {{-- Default ikon hamburger --}}
+            </button>
+            <h4 class="sidebar-title">
+                <img src="{{ asset('img/logo.png') }}" class="sidebar-logo" alt="Logo SMK">
+                    SMKNJ Bot
+            </h4>
+            <button id="new-chat-button" class="btn btn-outline-light btn-sm mb-3">
+                <i class="fas fa-plus me-1"></i>
+                    New Chat
+            </button>
+            <div id="chat-history-list">
+                <p class="text-muted small text-center">
+                    Loading history...</p>
             </div>
-            <button id="chatbot-close-btn">&times;</button>
         </div>
-        <div id="chat-messages">
-            {{-- Pesan Selamat Datang Awal --}}
-            <p><strong>SMKNJ Bot:</strong> Halo! Ada yang bisa saya bantu seputar SMK Nurul Jadid?</p>
-        </div>
-        <div id="chatbot-input-area">
-            <input type="text" id="chat-input" placeholder="Ketik pertanyaan...">
-            <button id="chat-send"><i class="fa fa-paper-plane"></i></button>
+        <div id="chatbot-container">
+            <div id="chatbot-header">
+                <div class="chatbot-profile">
+                    <img src="{{ asset('img/logo.png') }}" alt="SMKNJ Bot" class="chatbot-avatar">
+                    <span>SMKNJ Bot</span>
+                </div>
+                <button id="chatbot-close-btn">&times;</button>
+            </div>
+            <div id="chat-messages">
+                <p><strong>SMKNJ Bot:</strong> Halo! Ada yang bisa saya bantu seputar SMK Nurul Jadid?</p>
+            </div>
+            <div id="chatbot-input-area">
+                <input type="text" id="chat-input" placeholder="Ketik pertanyaan...">
+                <button id="chat-send"><i class="fa fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
-    {{-- AKHIR HTML CHATBOT --}}
-
+    {{-- == AKHIR HTML CHATBOT == --}}
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -247,142 +291,216 @@
     <script src="{{ asset('lib/easing/easing.min.js') }}"></script>
     <script src="{{ asset('lib/waypoints/waypoints.min.js') }}"></script>
     <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> {{-- Jika Anda pakai Swiper di halaman lain --}}
-
-
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 
-    {{-- TAMBAHKAN JAVASCRIPT CHATBOT DI SINI --}}
+    {{-- == JAVASCRIPT CHATBOT NJ-BOT == --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Variabel Elemen DOM ---
+            const chatWrapper = document.getElementById('chatbot-wrapper');
             const chatContainer = document.getElementById('chatbot-container');
             const chatBox = document.getElementById('chat-messages');
             const chatInput = document.getElementById('chat-input');
             const chatSendBtn = document.getElementById('chat-send');
             const toggleBtn = document.getElementById('chatbot-toggle-button');
             const closeBtn = document.getElementById('chatbot-close-btn');
-            
-            // Fungsi untuk membuka chatbox
-            function openChatbox() {
-                chatContainer.style.display = 'flex';
-                toggleBtn.style.display = 'none'; // Sembunyikan tombol bulat
-                chatInput.focus();
-            }
+            const sidebar = document.getElementById('chatbot-sidebar');
+            const newChatBtn = document.getElementById('new-chat-button');
+            const historyList = document.getElementById('chat-history-list');
+            const navbarToggleBtn = document.getElementById('navbar-chatbot-toggle');
+            const sidebarToggleBtn = document.getElementById('sidebar-toggle-button');
 
-            // Fungsi untuk menutup chatbox
-            function closeChatbox() {
-                chatContainer.style.display = 'none';
-                toggleBtn.style.display = 'block'; // Tampilkan lagi tombol bulat
-            }
-            
-            // Event listener untuk tombol toggle dan close
-            toggleBtn.addEventListener('click', openChatbox);
-            closeBtn.addEventListener('click', closeChatbox);
+            // --- State Aplikasi ---
+            let chatHistory = [];
+            let currentChatId = null;
+            let isSidebarVisible = true; // Default sidebar terlihat
 
-            // Event listener untuk tombol kirim dan Enter
-            chatSendBtn.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
+            // --- Fungsi Utility ---
+            function generateUniqueId() { return Date.now().toString(36) + Math.random().toString(36).substring(2); }
+            function generateTitle(msg) { return msg.length > 25 ? msg.substring(0, 22) + '...' : msg; }
+
+            // --- Fungsi Load/Save History ---
+            function loadHistoryFromStorage() {
+                const stored = localStorage.getItem('smknjChatHistory');
+                chatHistory = stored ? JSON.parse(stored) : [];
+                currentChatId = chatHistory.length > 0 ? chatHistory[chatHistory.length - 1]?.id : null;
+            }
+            function saveHistoryToStorage() { localStorage.setItem('smknjChatHistory', JSON.stringify(chatHistory)); }
+
+            // --- Fungsi Render UI ---
+            function renderHistoryList() {
+                if (!historyList) return;
+                historyList.innerHTML = '';
+                if (chatHistory.length === 0) {
+                    historyList.innerHTML = '<p class="text-muted small text-center mt-2">No history.</p>'; return;
                 }
-            });
+                [...chatHistory].reverse().forEach(chat => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    item.textContent = chat.title || 'Untitled';
+                    item.dataset.chatId = chat.id;
+                    if (chat.id === currentChatId) item.classList.add('active');
+                    item.addEventListener('click', () => { loadChatMessages(chat.id); });
+                    historyList.appendChild(item);
+                });
+            }
 
-            async function sendMessage() {
+            function loadChatMessages(chatId) {
+                currentChatId = chatId;
+                if (!chatBox) return;
+                chatBox.innerHTML = '';
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (chat?.messages) {
+                    chat.messages.forEach(msg => appendMessage(msg.sender, msg.text, false));
+                } else {
+                    currentChatId = null;
+                    appendMessage('bot', 'Halo! Ada yang bisa saya bantu seputar SMK Nurul Jadid?', false);
+                }
+                renderHistoryList();
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function appendMessage(sender, text, save = true) {
+                if (!chatBox) return;
+                const msgEl = document.createElement('p');
+                msgEl.innerHTML = `<strong>${sender === 'user' ? 'Anda' : 'NJ-Bot'}:</strong> ${text}`;
+                chatBox.appendChild(msgEl);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                if (save) {
+                    let chat = chatHistory.find(c => c.id === currentChatId);
+                    if (chat) {
+                        chat.messages.push({ sender, text });
+                    } else {
+                        const newId = generateUniqueId();
+                        const newTitle = sender === 'user' ? generateTitle(text) : 'New Chat';
+                        const welcomeMsg = { sender: 'bot', text: 'Halo! Ada yang bisa saya bantu seputar SMK Nurul Jadid?' };
+                        chat = { id: newId, title: newTitle, messages: [welcomeMsg, { sender, text }] };
+                        chatHistory.push(chat);
+                        currentChatId = newId;
+                        renderHistoryList();
+                    }
+                    saveHistoryToStorage();
+                }
+            }
+
+            // --- Fungsi Kirim ke Backend ---
+            async function sendMessage() { 
+                if (!chatInput || !chatSendBtn) return;
                 const message = chatInput.value.trim();
                 if (message === '') return;
 
-                appendMessage('user', message); // Tampilkan pesan user
-                chatInput.value = ''; // Kosongkan input
-                chatInput.disabled = true; // Nonaktifkan input saat menunggu
+                appendMessage('user', message);
+                const chatIdContext = currentChatId;
+                chatInput.value = '';
+                chatInput.disabled = true;
                 chatSendBtn.disabled = true;
-                appendMessage('bot', '<i>Mengetik...</i>'); // Tampilkan indikator loading
+                appendMessage('bot', '<i>Mengetik...</i>', false);
 
                 try {
-                    const response = await fetch('/ai-chat', { // Panggil route Laravel
-                        method: 'POST',
-                        headers: {
+                    const response = await fetch('/ai-chat', {
+                         method: 'POST',
+                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Ambil CSRF token
-                        },
-                        body: JSON.stringify({ message: message }) // Kirim data sebagai JSON
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                         },
+                         body: JSON.stringify({ message: message })
                     });
 
-                    // Hapus indikator loading
-                    const typingIndicator = chatBox.querySelector('p:last-child > i');
-                    if (typingIndicator && typingIndicator.textContent === 'Mengetik...') {
-                        typingIndicator.closest('p').remove();
-                    }
-                    
+                    const typingIndicator = chatBox ? chatBox.querySelector('p:last-child > i') : null;
+                    if (typingIndicator?.textContent === 'Mengetik...') typingIndicator.closest('p').remove();
+
                     const data = await response.json();
 
                     if (!response.ok) {
-                    // Tampilkan pesan error dari Laravel jika status bukan 2xx
-                    appendMessage('bot', `Error ${response.status}: ${data.reply || 'Gagal memproses permintaan.'}`);
+                        appendMessage('bot', `Error ${response.status}: ${data.reply || 'Gagal.'}`, false);
                     } else {
-                    appendMessage('bot', data.reply); // Tampilkan balasan AI
+                        let targetChat = chatHistory.find(c => c.id === chatIdContext);
+                        if (targetChat) {
+                            targetChat.messages.push({ sender: 'bot', text: data.reply });
+                            saveHistoryToStorage();
+                            if (currentChatId === chatIdContext) {
+                                appendMessage('bot', data.reply, false);
+                            }
+                        } else {
+                            appendMessage('bot', data.reply);
+                        }
                     }
-
                 } catch (error) {
-                    // Hapus indikator loading jika masih ada
-                    const typingIndicator = chatBox.querySelector('p:last-child > i');
-                    if (typingIndicator && typingIndicator.textContent === 'Mengetik...') {
-                        typingIndicator.closest('p').remove();
-                    }
+                    const typingIndicator = chatBox ? chatBox.querySelector('p:last-child > i') : null;
+                    if (typingIndicator?.textContent === 'Mengetik...') typingIndicator.closest('p').remove();
                     console.error("Error sending chat:", error);
-                    appendMessage('bot', 'Gagal terhubung ke server. Periksa koneksi Anda.');
+                    appendMessage('bot', 'Gagal terhubung ke server. Periksa koneksi.', false);
                 } finally {
-                    chatInput.disabled = false; // Aktifkan input lagi
-                    chatSendBtn.disabled = false;
-                    chatInput.focus();
+                    if(chatInput) chatInput.disabled = false;
+                    if(chatSendBtn) chatSendBtn.disabled = false;
+                    if(chatInput) chatInput.focus();
                 }
             }
 
-            function appendMessage(sender, text) {
-                const messageElement = document.createElement('p');
-                // Tambahkan class untuk styling berbeda (opsional)
-                // messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-                messageElement.innerHTML = `<strong>${sender === 'user' ? 'Anda' : 'NJ-Bot'}:</strong> ${text}`; 
-                chatBox.appendChild(messageElement);
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll ke bawah
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatContainer = document.getElementById('chatbot-container');
-            const chatBox = document.getElementById('chat-messages');
-            const chatInput = document.getElementById('chat-input');
-            const chatSendBtn = document.getElementById('chat-send');
-            const toggleBtn = document.getElementById('chatbot-toggle-button'); // Tombol bulat
-            const closeBtn = document.getElementById('chatbot-close-btn');     // Tombol X di header
-            const navbarToggleBtn = document.getElementById('navbar-chatbot-toggle'); // <<< Link di Navbar
-
-            // Fungsi untuk membuka chatbox
+            // --- Event Listeners UI ---
             function openChatbox(event) {
-                if (event) event.preventDefault(); // Mencegah link navbar pindah halaman
-                if(chatContainer) chatContainer.style.display = 'flex';
-                if(toggleBtn) toggleBtn.style.display = 'none'; // Sembunyikan tombol bulat jika ada
+                if (event) event.preventDefault();
+                if(chatWrapper) chatWrapper.style.display = 'flex';
+                if(toggleBtn) toggleBtn.style.display = 'none';
+                // Tampilkan sidebar jika di desktop dan sebelumnya disembunyikan
+                if (isSidebarVisible === false && window.innerWidth > 768 && sidebarToggleBtn) {
+                   toggleSidebar(); // Panggil fungsi toggle untuk menampilkannya
+                } else if (isSidebarVisible === true && window.innerWidth > 768 && sidebarToggleBtn){
+                    // Pastikan ikon benar saat dibuka kembali
+                     sidebarToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                     sidebarToggleBtn.title = 'Hide Sidebar';
+                     if(chatWrapper) chatWrapper.classList.remove('sidebar-hidden');
+                }
                 if(chatInput) chatInput.focus();
             }
-
-            // Fungsi untuk menutup chatbox
             function closeChatbox() {
-                if(chatContainer) chatContainer.style.display = 'none';
-                if(toggleBtn) toggleBtn.style.display = 'block'; // Tampilkan lagi tombol bulat jika ada
+                if(chatWrapper) chatWrapper.style.display = 'none';
+                if(toggleBtn) toggleBtn.style.display = 'block';
             }
-            
-            // Event listener
-            if(toggleBtn) toggleBtn.addEventListener('click', openChatbox); // Tombol bulat tetap bisa buka
+
+            function toggleSidebar() {
+                if (!chatWrapper || !sidebarToggleBtn) return;
+                isSidebarVisible = !isSidebarVisible;
+                chatWrapper.classList.toggle('sidebar-hidden', !isSidebarVisible);
+                sidebarToggleBtn.innerHTML = isSidebarVisible ? '<i class="fas fa-bars"></i>' : '<i class="fas fa-arrow-right"></i>';
+                sidebarToggleBtn.title = isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar';
+            }
+
+            // Tambahkan event listener
+            if(toggleBtn) toggleBtn.addEventListener('click', openChatbox);
             if(closeBtn) closeBtn.addEventListener('click', closeChatbox);
-            if(navbarToggleBtn) navbarToggleBtn.addEventListener('click', openChatbox); // <<< INI YANG MEMBUAT LINK NAVBAR BERFUNGSI
+            if(chatSendBtn) chatSendBtn.addEventListener('click', sendMessage);
+            if(chatInput) chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+            if(newChatBtn) newChatBtn.addEventListener('click', () => { loadChatMessages(null); });
+            if(navbarToggleBtn) navbarToggleBtn.addEventListener('click', openChatbox); // Link navbar buka chat
+            if(sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', toggleSidebar);
 
-            // ... (sisa kode sendMessage dan appendMessage) ...
-             async function sendMessage() { /* ... */ }
-             function appendMessage(sender, text) { /* ... */ }
+            // --- Inisialisasi ---
+            loadHistoryFromStorage();
+            renderHistoryList();
+            loadChatMessages(currentChatId); // Muat chat terakhir
+
+            // Set state sidebar awal (terlihat)
+            if (chatWrapper && sidebarToggleBtn && isSidebarVisible) {
+                 chatWrapper.classList.remove('sidebar-hidden');
+                 sidebarToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                 sidebarToggleBtn.title = 'Hide Sidebar';
+            } else if (chatWrapper && sidebarToggleBtn && !isSidebarVisible) {
+                // Jika state tersimpan sbg hidden (misal dari localStorage nanti)
+                 chatWrapper.classList.add('sidebar-hidden');
+                 sidebarToggleBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                 sidebarToggleBtn.title = 'Show Sidebar';
+            }
+
+
         });
-    </script>
-    {{-- AKHIR JAVASCRIPT CHATBOT --}}
 
-    @stack('scripts') {{-- Untuk menambahkan JS spesifik per halaman jika perlu --}}
+        // == AKHIR JAVASCRIPT CHATBOT == //
+    </script>
+
+    @stack('scripts')
 
 </body>
 </html>

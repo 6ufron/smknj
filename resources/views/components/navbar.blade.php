@@ -23,7 +23,7 @@
                 <a href="#" class="nav-link dropdown-toggle {{ Request::routeIs('program.*') ? 'active' : '' }}" data-bs-toggle="dropdown">Program</a>
                 <div class="dropdown-menu m-0">
                     <a href="{{ route('program.keahlian') }}" class="dropdown-item {{ Request::routeIs('program.keahlian') ? 'active' : '' }}">Program Keahlian</a>
-                    <a href="#" class="dropdown-item">Ekstrakurikuler</a>
+                    <a href="{{ route('ekstrakurikuler') }}" class="dropdown-item">Ekstrakurikuler</a>
                 </div>
             </div>
 
