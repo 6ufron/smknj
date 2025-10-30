@@ -11,13 +11,18 @@ use Illuminate\Http\Request;
 
 class BerandaController extends Controller
 {
-    public function index() {
+    /**
+     * Menampilkan halaman beranda dengan data layanan, kepala sekolah,
+     * berita terbaru, video, dan kata alumni.
+     */
+    public function index()
+    {
         $layanan = Layanan::all();
         $kepsek = Kepsek::all();
         $berita = Berita::latest()->take(6)->get();
         $video = Gavideo::all();
         $katalum = KataAlumni::all();
 
-        return view('beranda', compact(['layanan', 'kepsek', 'berita', 'katalum', 'video']));
+        return view('beranda', compact('layanan', 'kepsek', 'berita', 'katalum', 'video'));
     }
 }

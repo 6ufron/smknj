@@ -1,5 +1,5 @@
 @php
-    // Data slide sumber data kita
+    // Data slide sumber data
     $slides = [
         [
             'image' => 'img/slider1.jpg',
@@ -8,14 +8,14 @@
             'description' => 'Berinovasi tiada henti, mengabdi setulus hati.',
             'link' => 'https://psb.nuruljadid.net',
             'button_text' => 'DAFTAR SEKARANG',
-            'thumb_title' => 'SMK Nurul Jadid' // thumb_title sekarang tidak digunakan, tapi biarkan saja
+            'thumb_title' => 'SMK Nurul Jadid' 
         ],
         [
             'image' => 'img/slider2.jpeg',
             'subtitle' => 'Program Keahlian',
             'title' => 'SMK BISA',
             'description' => 'Mencetak siswa siap bekerja sesuai program keahlian.',
-            'link' => '#',
+            'link' => '/program-keahlian',
             'button_text' => 'LIHAT JURUSAN',
             'thumb_title' => 'Program Keahlian'
         ],
@@ -24,7 +24,7 @@
             'subtitle' => 'Prestasi Siswa',
             'title' => 'JUARA LKS NASIONAL',
             'description' => 'Membuktikan kualitas pendidikan melalui pencapaian di tingkat nasional.',
-            'link' => '#',
+            'link' => '/galeri-foto',
             'button_text' => 'LIHAT PRESTASI',
             'thumb_title' => 'Prestasi Siswa'
         ],
@@ -33,7 +33,7 @@
             'subtitle' => 'Kegiatan Unggulan',
             'title' => 'EKSTRAKURIKULER ROBOTIK',
             'description' => 'Mengembangkan kreativitas dan logika melalui perakitan dan pemrograman robot.',
-            'link' => '#',
+            'link' => '/ekstrakurikuler',
             'button_text' => 'JELAJAHI',
             'thumb_title' => 'Ekstrakurikuler'
         ],

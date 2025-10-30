@@ -6,22 +6,12 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use \App\Models\Berita;
+use App\Models\Berita;
 
 class BeritaController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
     protected $title = 'Berita';
 
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
     protected function grid()
     {
         $grid = new Grid(new Berita());
@@ -34,15 +24,23 @@ class BeritaController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
+        // --- Filter ---
+        $grid->filter(function($filter) {
+            $filter->disableIdFilter(); // Hapus filter default ID
+
+            $filter->like('judul', 'Judul'); // Pencarian berdasarkan judul
+            $filter->equal('kategori', 'Kategori')->select([
+                'sekolah' => 'Sekolah',
+                'pendidikan' => 'Pendidikan',
+                'prestasi' => 'Prestasi'
+            ]); // Filter kategori
+            $filter->between('created_at', 'Tanggal Dibuat')->date(); // Filter berdasarkan rentang tanggal dibuat
+            $filter->between('updated_at', 'Tanggal Diperbarui')->date(); // Filter berdasarkan rentang tanggal diperbarui
+        });
+
         return $grid;
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
     protected function detail($id)
     {
         $show = new Show(Berita::findOrFail($id));
@@ -58,11 +56,6 @@ class BeritaController extends AdminController
         return $show;
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
     protected function form()
     {
         $form = new Form(new Berita());
@@ -73,14 +66,17 @@ class BeritaController extends AdminController
                 ->move('images/berita_sekolah')
                 ->uniqueName()
                 ->rules('mimes:jpeg,jpg,png|max:2048');
-            $form->select('kategori','Kategori')->options(['sekolah' => 'Sekolah', 'pendidikan' => 'Pendidikan', 'prestasi' => 'Prestasi']);
+            $form->select('kategori','Kategori')->options([
+                'sekolah' => 'Sekolah', 
+                'pendidikan' => 'Pendidikan', 
+                'prestasi' => 'Prestasi'
+            ]);
         });
 
         $form->column(1/2, function ($form) {
             $form->textarea('kalimat', __('Kalimat'));
-            $form->text('akses', __('Di akses'));
+            $form->text('akses', __('Diakses'));
         });
-        
 
         return $form;
     }

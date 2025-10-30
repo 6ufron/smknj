@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProgramKeahlianTable extends Migration
+class CreateDownloadTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateProgramKeahlianTable extends Migration
      */
     public function up()
     {
-        Schema::create('program_keahlian', function (Blueprint $table) {
+        Schema::create('download', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nama')->nullable();
-            $table->string('singkatan')->nullable();
-            $table->string('foto')->nullable();
-            $table->text('deskripsi')->nullable();
+            $table->string('title')->comment('Nama Dokumen')->nullable();
+            $table->text('description')->comment('Keterangan')->nullable();
+            $table->string('file_path')->comment('Tempat menyimpan alamat file')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateProgramKeahlianTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('program_keahlian');
+        Schema::dropIfExists('download');
     }
 }

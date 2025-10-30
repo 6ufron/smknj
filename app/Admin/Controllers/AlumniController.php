@@ -26,6 +26,21 @@ class AlumniController extends AdminController
         $grid->column('created_at', __('Dibuat pada'))->sortable();
         $grid->column('updated_at', __('Diperbarui pada'))->sortable();
 
+        // --- Filter Data ---
+        $grid->filter(function($filter) {
+            $filter->disableIdFilter(); // Hapus filter default ID
+
+            $filter->like('nama', 'Nama Lengkap'); // Pencarian nama
+            $filter->like('nomor_induk', 'Nomor Induk Keluarga (NIK)'); // Pencarian NIK
+            $filter->like('nisn', 'NISN'); // Pencarian NISN
+            $filter->like('jurusan', 'Jurusan'); // Pencarian jurusan
+            $filter->like('orang_tua', 'Orang Tua/Wali'); // Pencarian orang tua
+            $filter->equal('status', 'Status Kehadiran')->select([
+                'Hadir' => 'Hadir',
+                'Tidak Hadir' => 'Tidak Hadir'
+            ]); // Filter status hadir/tidak hadir
+        });
+
         return $grid;
     }
 
@@ -62,7 +77,7 @@ class AlumniController extends AdminController
             ])
             ->required()
             ->attribute('data-placeholder', 'Pilih status kehadiran...');
-            
+
         return $form;
     }
 }

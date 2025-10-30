@@ -2,6 +2,7 @@
 
 use App\Admin\Controllers\AlumniController;
 use App\Admin\Controllers\BeritaController;
+use App\Admin\Controllers\DownloadController;
 use App\Admin\Controllers\EkstrakurikulerController;
 use App\Admin\Controllers\GafotoController;
 use App\Admin\Controllers\GavideoController;
@@ -34,11 +35,12 @@ Route::group([
     $router->resource('profil-sekolahs', ProfilSekolahController::class);
     $router->resource('vimisis', VimisiController::class);
     $router->resource('identi-sekolahs', IdentiSekolahController::class);
-    $router->resource('jurusans', JurusanController::class);
+    $router->resource('konsentrasikeahlian', JurusanController::class);
     $router->resource('kata-alumnis', KatalumController::class);
     $router->resource('gavideos', GavideoController::class);
     $router->resource('ekstrakurikulers', EkstrakurikulerController::class);
     $router->resource('gafotos', GafotoController::class);
     $router->resource('alumnis', AlumniController::class);
     $router->resource('pengumuman', PengumumanController::class);
+    $router->resource('download', DownloadController::class);
 });

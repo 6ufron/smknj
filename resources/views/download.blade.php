@@ -1,106 +1,103 @@
-{{-- resources/views/download.blade.php --}}
-
 @extends('master')
 
-@section('title', 'Daftar Download')
+@section('title', 'Dokumen Download SMK Nurul Jadid')
+
+@php
+    use Carbon\Carbon;
+@endphp
 
 @section('content')
-
-    {{-- <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">Daftar Download</h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="/">Beranda</a></li>
-                            <li class="breadcrumb-item text-white active" aria-current="page">Download</li>
-                        </ol>
-                    </nav>
-                </div>
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">@yield('title')</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center bg-transparent p-0 m-0">
+                        <li class="breadcrumb-item"><a class="text-white" href="{{ route('beranda') }}">Beranda</a></li>
+                        <li class="breadcrumb-item text-white">Pages</li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">@yield('title')</li>
+                    </ol>
+                </nav>
             </div>
-        </div>
-    </div> --}}
-    {{-- Data Dummy - Ganti ini dengan data dari Controller Anda --}}
-    @php
-        $dokumen = [
-            ['id' => 1, 'title' => 'Brosur PPDB 2024/2025', 'size' => '2.5 MB', 'type' => 'PDF', 'file_url' => '/files/brosur-ppdb-2024.pdf'],
-            ['id' => 2, 'title' => 'Kalender Akademik Semester Genap 2023/2024', 'size' => '800 KB', 'type' => 'PDF', 'file_url' => '/files/kalender-akademik.pdf'],
-            ['id' => 3, 'title' => 'Formulir Pendaftaran Ulang', 'size' => '120 KB', 'type' => 'DOCX', 'file_url' => '/files/form-daftar-ulang.docx'],
-        ];
-    @endphp
-
-    <div class="container-xxl py-5">
-        <div class="container">
-
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-8">
-                    <form action="/download" method="GET">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control form-control-lg" placeholder="Cari dokumen..." value="{{ request('search') }}">
-                            <button class="btn btn-primary px-4" type="submit"><i class="fa fa-search"></i></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="table-responsive shadow-sm rounded">
-                        <table class="table table-striped table-hover align-middle mb-0">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col" class="py-3 px-4">Nama Dokumen</th>
-                                    <th scope="col" class="py-3">Ukuran File</th>
-                                    <th scope="col" class="py-3">Tipe</th>
-                                    <th scope="col" class="py-3 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($dokumen as $doc)
-                                    <tr>
-                                        <td class="py-3 px-4">
-                                            <i class="fa fa-file-alt text-primary me-2"></i>
-                                            <strong>{{ $doc['title'] }}</strong>
-                                        </td>
-                                        <td class="py-3">{{ $doc['size'] }}</td>
-                                        <td class="py-3">
-                                            @if ($doc['type'] == 'PDF')
-                                                <span class="badge bg-danger">{{ $doc['type'] }}</span>
-                                            @else
-                                                <span class="badge bg-info">{{ $doc['type'] }}</span>
-                                            @endif
-                                        </td>
-                                        <td class="py-3 text-center">
-                                            <a href="{{ $doc['file_url'] }}" class="btn btn-primary btn-sm" download>
-                                                <i class="fa fa-download me-2"></i>Download
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center py-4 text-muted">Dokumen tidak ditemukan.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-12 d-flex justify-content-center">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            {{-- Ganti ini dengan $dokumen->links() saat sudah terhubung ke Controller --}}
-                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a></li>
-                            <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-
         </div>
     </div>
-    @endsection
+</div>
+
+<div class="container-xxl py-5">
+    <div class="container">
+        {{-- Header Halaman --}}
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-primary px-3 d-inline-block">Arsip</h6>
+            <h1 class="mb-5">Download Dokumen</h1>
+        </div>
+
+        <div class="row wow fadeInUp" data-wow-delay="0.3s">
+            <div class="col-lg-12">
+                <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th style="width: 5%;" class="py-3">No</th>
+                                <th class="py-3">Nama Dokumen</th>
+                                <th style="width: 15%;" class="py-3">Tipe File</th>
+                                <th style="width: 15%;" class="py-3">Tanggal Upload</th>
+                                <th style="width: 10%;" class="py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($downloads as $index => $item)
+                                <tr class="align-middle">
+                                    <td class="text-center">{{ $index + 1 }}</td>
+                                    <td>
+                                        <i class="fa fa-file-alt text-primary me-2"></i>
+                                        <strong>{{ $item->title }}</strong>
+                                        @if($item->description)
+                                            <p class="text-muted small mb-0">{{ $item->description }}</p>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @php
+                                            $ext = pathinfo($item->file_path, PATHINFO_EXTENSION);
+                                            $badgeClass = match(strtolower($ext)) {
+                                                'pdf' => 'bg-danger',
+                                                'doc', 'docx' => 'bg-primary',
+                                                'zip', 'rar' => 'bg-secondary',
+                                                default => 'bg-info',
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }} px-3 py-2">{{ strtoupper($ext) }}</span>
+                                    </td>
+                                    <td class="text-center">{{ Carbon::parse($item->created_at)->isoFormat('D MMMM Y') }}</td>
+                                    <td class="text-center">
+                                        @if ($item->file_path && file_exists(storage_path('app/public/' . $item->file_path)))
+                                            <a href="{{ asset('storage/' . $item->file_path) }}" class="btn btn-primary btn-sm" target="_blank" download>
+                                                <i class="fa fa-download me-1"></i>Download
+                                            </a>
+                                        @else
+                                            <span class="text-muted small">File Hilang</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-danger">
+                                        Tidak ada dokumen yang tersedia saat ini.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Pagination (opsional) --}}
+                @if(method_exists($downloads, 'links'))
+                    <div class="mt-4 d-flex justify-content-center">
+                        {{ $downloads->links('pagination::bootstrap-5') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

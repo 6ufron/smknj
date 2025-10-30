@@ -3,32 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pengumuman; // Panggil model Pengumuman
+use App\Models\Pengumuman;
 
 class PengumumanController extends Controller
 {
     public function pengumuman(Request $request)
     {
         $query = Pengumuman::query()
-                    ->where('is_published', true) // Hanya tampilkan yang sudah terbit
-                    ->whereDate('published_at', '<=', now()); // Hanya tampilkan yang tanggal terbitnya sudah lewat
+            ->where('is_published', true)
+            ->whereDate('published_at', '<=', now());
 
-        // Logika untuk search
-        if ($request->has('search') && $request->search != '') {
-            $query->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('content', 'like', '%' . $request->search . '%'); // Cari juga di konten
+        // Search title + content dengan grouped OR
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
         }
 
-        // Ambil data, urutkan terbaru, dan gunakan pagination
-        $pengumumans = $query->orderBy('published_at', 'desc')->paginate(6); // Tampilkan 6 per halaman
+        // Order terbaru dan paginasi
+        $pengumumans = $query
+            ->orderBy('published_at', 'desc')
+            ->paginate(6)
+            ->withQueryString(); // agar search tetap pada tiap halaman
 
-        return view('pengumuman', ['pengumumans' => $pengumumans]); // Kirim data ke view
+        return view('pengumuman', compact('pengumumans'));
     }
 
-    // ... (method download Anda) ...
     public function download(Request $request)
     {
-        // ...
         return view('download');
     }
 }
