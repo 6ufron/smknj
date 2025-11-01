@@ -18,6 +18,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        border-radius: 1px;
     }
     .jurusan-item:hover {
         transform: translateY(-8px);
@@ -27,7 +28,7 @@
         width: 100px;
         height: 100px;
         object-fit: cover;
-        border-radius: 20px;
+        border-radius: 1px;
         background-color: #f8f9fa;
         margin: 0 auto 1.5rem auto;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);

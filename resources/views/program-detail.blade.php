@@ -8,7 +8,7 @@
         width: 100%;
         height: auto;
         object-fit: contain;
-        border-radius: 12px;
+        border-radius: 1px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         display: block;
     }

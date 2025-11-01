@@ -12,6 +12,8 @@ use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\DownloadSMKNJController;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\FasilitasSMKController;
+use App\Http\Controllers\PrestasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,10 @@ Route::prefix('profil-smknj')->group(function () {
     Route::get('visi-misi', [ProfilSMKNJController::class, 'vimisi'])->name('smknj.vimisi');
     Route::get('identitas', [ProfilSMKNJController::class, 'identitas'])->name('smknj.identitas');
 });
+
+// Fasilitas SMKNJ
+Route::get('fasilitas', [FasilitasSMKController::class, 'index'])->name('fasilitas.index');
+Route::get('fasilitas/{id}', [FasilitasSMKController::class, 'show'])->name('fasilitas.show');
 
 // Program Keahlian
 Route::get('program-keahlian', [ProgramSMKNJController::class, 'keahlian'])->name('program.keahlian');
@@ -50,6 +56,7 @@ Route::prefix('alumni-smknj')->group(function () {
 // Galeri (Jika ada detail page, harus diubah juga)
 Route::get('galeri-foto', [GaleriController::class, 'foto'])->name('galeri.foto');
 Route::get('galeri-video', [GaleriController::class, 'video'])->name('galeri.video');
+Route::get('galeri-prestasi', [PrestasiController::class, 'prestasi'])->name('galeri.prestasi');
 // PENTING: Jika Anda punya route detail galeri, ubah dari {id} -> {gafoto} atau {gavideo}
 
 // Berita

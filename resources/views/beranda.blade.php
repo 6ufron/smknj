@@ -2,7 +2,7 @@
 
 @section('title', 'Beranda')
 
-{{-- 1. Push CSS (CSS Slider sekarang dimuat dari file aset utama) --}}
+{{-- 1. Push CSS (CSS Slider dimuat dari file aset utama) --}}
 @push('styles')
 
 @endpush

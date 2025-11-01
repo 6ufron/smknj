@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'Dokumen Download SMK Nurul Jadid')
+@section('title', 'Dokumen Download')
 
 @php
     use Carbon\Carbon;

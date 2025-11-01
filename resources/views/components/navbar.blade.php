@@ -29,7 +29,8 @@
                        class="dropdown-item {{ Request::routeIs('smknj.vimisi') ? 'active' : '' }}">Visi & Misi</a>
                     <a href="{{ route('smknj.identitas') }}"
                        class="dropdown-item {{ Request::routeIs('smknj.identitas') ? 'active' : '' }}">Identitas Sekolah</a>
-                    <a href="#" class="dropdown-item">Hubungan Industri</a>
+                    <a href="{{ route('fasilitas.index') }}"
+                        class="dropdown-item {{ Request::routeIs('fasilitas.index') ? 'active' : '' }}">Fasilitas</a>
                 </div>
             </div>
 
@@ -59,7 +60,7 @@
                        class="dropdown-item {{ Request::routeIs('galeri.foto') ? 'active' : '' }}">Foto</a>
                     <a href="{{ route('galeri.video') }}"
                        class="dropdown-item {{ Request::routeIs('galeri.video') ? 'active' : '' }}">Video</a>
-                    <a href="#" class="dropdown-item">Fasilitas</a>
+                    <a href="{{ route('galeri.prestasi') }}" class="dropdown-item">Prestasi</a>
                 </div>
             </div>
 
