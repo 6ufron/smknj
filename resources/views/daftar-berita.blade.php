@@ -151,12 +151,8 @@ use Illuminate\Support\Str;
                         </small>
 
                         <small class="flex-fill text-center py-2">
-                            {{-- 
-                            ============================================
-                            PERBAIKAN: Mengganti $b->id menjadi $b
-                            ============================================
-                            --}}
-                            <a href="{{ route('detail-berita', $b) }}" class="text-danger"><b>Read More</b></a>
+
+                            <a href="{{ route('detail-berita', $b) }}" class="text-danger"><b>Baca Selengkapnya</b></a>
                         </small>
                     </div>
 

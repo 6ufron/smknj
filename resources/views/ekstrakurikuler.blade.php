@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* Style untuk Kartu Ekstrakurikuler */
     .ekstra-card {
         border-radius: 1px; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -48,7 +47,7 @@
     .read-more-toggle {
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--primary); /* Menggunakan warna primary dari template */
+        color: var(--primary);
         text-decoration: none;
         margin-top: auto; /* Mendorong tombol ke bagian bawah card-body */
         padding-top: 10px; /* Jarak dari teks deskripsi */
@@ -113,7 +112,7 @@
                         <div class="card-body d-flex flex-column flex-grow-1 text-start">
                             <h4 class="card-title mb-2">{{ $v->nama }}</h4>
 
-                            {{-- LOGIKA BARU: Deskripsi dengan "Baca Selengkapnya" --}}
+                            {{-- "Baca Selengkapnya" --}}
                             @php
                                 $limit = 100;
                                 // Asumsi kolom deskripsi adalah 'deskripsi'
@@ -186,11 +185,10 @@
                 const container = cardBody.querySelector('.description-container');
                 if (!container) return; // Hentikan jika tidak ketemu
 
-                // 3. Sekarang cari teks di dalam container
+                // 3. cari teks di dalam container
                 const shortText = container.querySelector('.description-short');
                 const fullText = container.querySelector('.description-full');
 
-                // Pastikan kedua elemen teks ada
                 if (!shortText || !fullText) return; 
 
                 // Cek status saat ini (apakah teks lengkap sedang disembunyikan)
@@ -205,7 +203,7 @@
                     // Sembunyikan teks lengkap
                     fullText.style.display = 'none';
                     shortText.style.display = 'inline';
-                    this.textContent = 'Baca selengkapnya'; // Kembalikan teks tombol
+                    this.textContent = 'Baca selengkapnya'; 
                 }
             });
         });
