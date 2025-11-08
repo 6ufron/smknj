@@ -12,6 +12,7 @@ class AlumniController extends AdminController
 {
     protected $title = 'Alumni';
 
+    // Grid view untuk daftar alumni
     protected function grid()
     {
         $grid = new Grid(new Alumni());
@@ -26,24 +27,24 @@ class AlumniController extends AdminController
         $grid->column('created_at', __('Dibuat pada'))->sortable();
         $grid->column('updated_at', __('Diperbarui pada'))->sortable();
 
-        // --- Filter Data ---
-        $grid->filter(function($filter) {
-            $filter->disableIdFilter(); // Hapus filter default ID
-
-            $filter->like('nama', 'Nama Lengkap'); // Pencarian nama
-            $filter->like('nomor_induk', 'Nomor Induk Keluarga (NIK)'); // Pencarian NIK
-            $filter->like('nisn', 'NISN'); // Pencarian NISN
-            $filter->like('jurusan', 'Jurusan'); // Pencarian jurusan
-            $filter->like('orang_tua', 'Orang Tua/Wali'); // Pencarian orang tua
+        // Filter sederhana untuk pencarian data alumni
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->like('nama', 'Nama Lengkap');
+            $filter->like('nomor_induk', 'Nomor Induk Keluarga (NIK)');
+            $filter->like('nisn', 'NISN');
+            $filter->like('jurusan', 'Jurusan');
+            $filter->like('orang_tua', 'Orang Tua/Wali');
             $filter->equal('status', 'Status Kehadiran')->select([
                 'Hadir' => 'Hadir',
-                'Tidak Hadir' => 'Tidak Hadir'
-            ]); // Filter status hadir/tidak hadir
+                'Tidak Hadir' => 'Tidak Hadir',
+            ]);
         });
 
         return $grid;
     }
 
+    // Detail view untuk melihat data spesifik alumni
     protected function detail($id)
     {
         $show = new Show(Alumni::findOrFail($id));
@@ -61,6 +62,7 @@ class AlumniController extends AdminController
         return $show;
     }
 
+    // Form untuk input dan edit data alumni
     protected function form()
     {
         $form = new Form(new Alumni());
@@ -73,7 +75,7 @@ class AlumniController extends AdminController
         $form->select('status', 'Status Kehadiran')
             ->options([
                 'Hadir' => 'Hadir',
-                'Tidak Hadir' => 'Tidak Hadir'
+                'Tidak Hadir' => 'Tidak Hadir',
             ])
             ->required()
             ->attribute('data-placeholder', 'Pilih status kehadiran...');

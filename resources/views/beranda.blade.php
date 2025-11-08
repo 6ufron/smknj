@@ -61,7 +61,8 @@
             function updateCounter() {
                 if (slideCounter && mainSlider) {
                     let currentSlideIndex = mainSlider.realIndex + 1;
-                    slideCounter.textContent = currentSlideIndex < 10 ? '0' + currentSlideIndex : currentSlideIndex;
+                    // slideCounter.textContent = currentSlideIndex < 10 ? '0' + currentSlideIndex : currentSlideIndex;
+                    slideCounter.textContent = currentSlideIndex;
                 }
             }
 

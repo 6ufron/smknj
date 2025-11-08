@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
     /* Kartu Berita */
     .course-item {
         background: #ffffff;
-        border-radius: 1px;
+        border-radius: 7px;
         overflow: hidden;
         transition: transform 0.25s ease, box-shadow 0.25s ease;
         border: 1px solid #e6e6e6;
@@ -95,12 +95,20 @@ use Illuminate\Support\Str;
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
-                <h1 class="display-3 text-white animated slideInDown">@yield('title')</h1>
+                <h1 class="display-3 text-white animated slideInDown">
+                    @yield('title')
+                </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a class="text-white" href="{{ route('beranda') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">@yield('title')</li>
+                        <li class="breadcrumb-item">
+                            <a class="text-white" href="{{ route('beranda') }}">Beranda</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a class="text-white" href="#">Pages</a>
+                        </li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">
+                            @yield('title')
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -160,9 +168,14 @@ use Illuminate\Support\Str;
             </div>
             @endforeach
 
-            <div class="col-12 mt-5 d-flex justify-content-center">
-                {{ $berita->links('pagination::bootstrap-4') }}
-            </div>
+            <!-- Pagination -->
+            @if(method_exists($berita, 'links') && $berita->count())
+                <div class="pagination-container wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="d-flex justify-content-center">
+                        {{ $berita->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            @endif
 
         </div>
     </div>

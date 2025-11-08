@@ -2,7 +2,7 @@
     // Data slide sumber data
     $slides = [
         [
-            'image' => 'img/slider1.jpg',
+            'image' => 'img/Sekolah.jpg',
             'subtitle' => 'Selamat Datang di',
             'title' => 'SMK Nurul Jadid',
             'description' => 'Berinovasi tiada henti, mengabdi setulus hati.',
@@ -20,29 +20,29 @@
             'thumb_title' => 'Program Keahlian'
         ],
         [
-            'image' => 'img/slider3.jpeg',
+            'image' => 'img/Ekstrakulikuler.jpg',
             'subtitle' => 'Prestasi Siswa',
             'title' => 'JUARA LKS NASIONAL',
             'description' => 'Membuktikan kualitas pendidikan melalui pencapaian di tingkat nasional.',
-            'link' => '/galeri-foto',
+            'link' => '/galeri-prestasi',
             'button_text' => 'LIHAT PRESTASI',
             'thumb_title' => 'Prestasi Siswa'
         ],
         [
-            'image' => 'img/slider4.jpeg',
+            'image' => 'img/ektra.png',
             'subtitle' => 'Kegiatan Unggulan',
-            'title' => 'EKSTRAKURIKULER ROBOTIK',
+            'title' => 'EKSTRAKURIKULER JURNALISTIK',
             'description' => 'Mengembangkan kreativitas dan logika melalui perakitan dan pemrograman robot.',
             'link' => '/ekstrakurikuler',
             'button_text' => 'JELAJAHI',
             'thumb_title' => 'Ekstrakurikuler'
         ],
         [
-            'image' => 'img/slider5.jpg',
+            'image' => 'img/lab.jpg',
             'subtitle' => 'Fasilitas Modern',
             'title' => 'LABORATORIUM LENGKAP',
             'description' => 'Menunjang praktik siswa dengan peralatan terkini dan modern.',
-            'link' => '#',
+            'link' => '/fasilitas',
             'button_text' => 'LIHAT FASILITAS',
             'thumb_title' => 'Fasilitas'
         ],

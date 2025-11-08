@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class KelulusanController extends Controller
 {
     /**
-     * Menampilkan halaman form cek kelulusan
+     * Tampilkan halaman form cek kelulusan
      */
     public function showCheckForm()
     {
@@ -17,23 +17,18 @@ class KelulusanController extends Controller
     }
 
     /**
-     * Memproses data form cek kelulusan
+     * Proses cek kelulusan siswa berdasarkan NISN dan tanggal lahir
      */
     public function processCheck(Request $request)
     {
-        // 1. Validasi input
+        // Validasi input
         $validated = $request->validate([
             'nisn' => 'required|numeric',
             'tanggal_lahir' => 'required|date',
         ]);
 
         try {
-            // 2. Cari data siswa di database berdasarkan NISN dan Tanggal Lahir
-            // $siswa = Siswa::where('nisn', $validated['nisn'])
-            //               ->where('tanggal_lahir', $validated['tanggal_lahir'])
-            //               ->first();
-
-            // --- Logika Dummy ---
+            // --- Logika dummy / bisa diganti query ke database ---
             $siswa = null;
             if ($validated['nisn'] == '1234567890' && $validated['tanggal_lahir'] == '2007-05-10') {
                 $siswa = (object)['nama' => 'Budi Santoso', 'status_lulus' => true];
@@ -41,33 +36,20 @@ class KelulusanController extends Controller
                 $siswa = (object)['nama' => 'Ani Lestari', 'status_lulus' => false];
             }
 
-            // 3. Cek hasil
             if ($siswa) {
-                if ($siswa->status_lulus) {
-                    // Redirect ke halaman hasil LULUS (buat halaman ini nanti)
-                    // return redirect()->route('hasil-kelulusan.sukses')->with('siswa', $siswa); 
-
-                    // Atau tampilkan pesan sukses di halaman ini saja
-                    return back()->with('status', "Selamat {$siswa->nama}, Anda dinyatakan **LULUS**.");
-                } else {
-                    // Redirect ke halaman hasil TIDAK LULUS (buat halaman ini nanti)
-                    // return redirect()->route('hasil-kelulusan.gagal')->with('siswa', $siswa);
-
-                    // Atau tampilkan pesan gagal di halaman ini saja
-                    return back()->with('error', "Mohon maaf {$siswa->nama}, Anda dinyatakan **TIDAK LULUS**.");
-                }
-            } else {
-                Log::warning('Data siswa tidak ditemukan', [
-                    'nisn' => $validated['nisn'], 
-                    'tanggal_lahir' => $validated['tanggal_lahir']
-                ]);
-                return back()->with('error', 'Data siswa dengan NISN dan Tanggal Lahir tersebut tidak ditemukan.');
+                // Tampilkan hasil langsung di halaman yang sama
+                return $siswa->status_lulus
+                    ? back()->with('status', "Selamat {$siswa->nama}, Anda dinyatakan **LULUS**.")
+                    : back()->with('error', "Mohon maaf {$siswa->nama}, Anda dinyatakan **TIDAK LULUS**.");
             }
 
+            // Data tidak ditemukan
+            Log::warning('Data siswa tidak ditemukan', $validated);
+            return back()->with('error', 'Data siswa dengan NISN dan Tanggal Lahir tersebut tidak ditemukan.');
+
         } catch (\Exception $e) {
-            Log::error('Terjadi kesalahan saat memproses cek kelulusan', [
-                'error' => $e->getMessage()
-            ]);
+            // Tangani error server
+            Log::error('Kesalahan saat proses cek kelulusan', ['error' => $e->getMessage()]);
             return back()->with('error', 'Terjadi kesalahan pada server. Silakan coba lagi nanti.');
         }
     }

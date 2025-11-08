@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class BerandaController extends Controller
 {
     /**
-     * Menampilkan halaman beranda dengan data layanan, kepala sekolah,
+     * Tampilkan halaman beranda dengan data layanan, kepala sekolah,
      * berita terbaru, video, dan kata alumni.
      */
     public function index()

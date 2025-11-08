@@ -4,6 +4,7 @@ use App\Admin\Controllers\AlumniController;
 use App\Admin\Controllers\BeritaController;
 use App\Admin\Controllers\DownloadController;
 use App\Admin\Controllers\EkstrakurikulerController;
+use App\Admin\Controllers\EkstraKategoriController;
 use App\Admin\Controllers\GafotoController;
 use App\Admin\Controllers\GavideoController;
 use App\Admin\Controllers\GaprestasiController;
@@ -42,6 +43,7 @@ Route::group([
     $router->resource('kata-alumnis', KatalumController::class);
     $router->resource('gavideos', GavideoController::class);
     $router->resource('ekstrakurikuler', EkstrakurikulerController::class);
+    $router->resource('ekstra-kategoris', EkstraKategoriController::class);
     $router->resource('gafotos', GafotoController::class);
     $router->resource('gaprestaso', GaprestasiController::class);
     $router->resource('alumnis', AlumniController::class);

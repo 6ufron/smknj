@@ -1,5 +1,3 @@
-{{-- == HTML CHATBOT NJ-BOT (DENGAN SIDEBAR & TOGGLE + MENU HISTORY) == --}}
-
 <button id="chatbot-toggle-button"> <i class="fas fa-comments"></i> </button>
 
 <div id="chatbot-wrapper"> 

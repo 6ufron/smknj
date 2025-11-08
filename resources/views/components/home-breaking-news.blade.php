@@ -13,7 +13,7 @@
                 <div class="course-item bg-light h-100 d-flex flex-column">
 
                     <div class="position-relative overflow-hidden d-flex justify-content-center align-items-center">
-                        <img class="img" src="{{ asset('storage/'.$b->foto) }}" alt="" height="300" width="auto">
+                        <img class="img" src="{{ asset('storage/'.$b->foto) }}" alt="" height="300" width="auto" border-radius="7px">
                     </div>
 
                     <div class="p-4 pb-0 flex-grow-1">
@@ -39,7 +39,7 @@
                         </small>
                         <small class="flex-fill text-center py-2">
                             <a href="{{ route('detail-berita', $b->id) }}" class="text-danger" target="_blank">
-                                <strong>Read More</strong>
+                                <strong>Baca Selengkapnya</strong>
                             </a>
                         </small>
                     </div>

@@ -7,20 +7,32 @@ use App\Models\Fasilitas;
 
 class FasilitasSMKController extends Controller
 {
-    public function index()
+    /**
+     * Tampilkan halaman fasilitas SMK dengan paginasi.
+     */
+    public function index(Request $request)
     {
-        // Ambil SEMUA fasilitas untuk diproses di View
-        $fasilitas = Fasilitas::orderBy('kategori', 'asc')
-            ->orderBy('nama', 'asc')
-            ->get();
+        $limit = 6; // Item per halaman
 
-        // Kirim data dengan nama variabel yang dibutuhkan View
-        return view('fasilitas', compact('fasilitas'));
+        // Fasilitas Utama
+        $fasilitasUtama = Fasilitas::where('kategori', 'utama')
+                            ->orderBy('nama', 'asc')
+                            ->paginate($limit, ['*'], 'utama_page');
+
+        // Fasilitas Pendukung
+        $fasilitasPendukung = Fasilitas::where('kategori', 'pendukung')
+                                ->orderBy('nama', 'asc')
+                                ->paginate($limit, ['*'], 'pendukung_page');
+
+        return view('fasilitas', compact('fasilitasUtama', 'fasilitasPendukung'));
     }
 
-    public function show($id) // Method detail Fasilitas
+    /**
+     * Tampilkan detail fasilitas.
+     * Route Model Binding otomatis mendapatkan $fasilitas.
+     */
+    public function show(Fasilitas $fasilitas)
     {
-        $item = Fasilitas::findOrFail($id);
-        return view('fasilitas-detail', compact('item'));
+        return view('fasilitas-detail', ['item' => $fasilitas]);
     }
 }

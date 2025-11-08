@@ -6,71 +6,63 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use \App\Models\Jurusan;
+use App\Models\Jurusan;
 
 class JurusanController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
     protected $title = 'Jurusan';
 
     /**
-     * Make a grid builder.
-     *
-     * @return Grid
+     * Grid data jurusan.
      */
     protected function grid()
     {
         $grid = new Grid(new Jurusan());
 
-        $grid->column('id', __('Id'));
-        $grid->column('nama', __('Nama'));
-        $grid->column('singkatan', __('Singkatan'));
-        $grid->column('deskripsi', __('Deskripsi'));
-        $grid->column('foto', __('Foto'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', 'ID');
+        $grid->column('nama', 'Nama');
+        $grid->column('singkatan', 'Singkatan');
+        $grid->column('deskripsi', 'Deskripsi');
+        $grid->column('foto', 'Foto')->image('', 60, 60);
+        $grid->column('created_at', 'Dibuat');
+        $grid->column('updated_at', 'Diperbarui');
 
         return $grid;
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
+     * Detail jurusan.
      */
     protected function detail($id)
     {
         $show = new Show(Jurusan::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('nama', __('Nama'));
-        $show->field('deskripsi', __('Deskripsi'));
-        $show->field('singkatan', __('Singkatan'));
-        $show->field('foto', __('Foto'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('id', 'ID');
+        $show->field('nama', 'Nama');
+        $show->field('singkatan', 'Singkatan');
+        $show->field('deskripsi', 'Deskripsi');
+        $show->field('foto', 'Foto')->image();
+        $show->field('created_at', 'Dibuat');
+        $show->field('updated_at', 'Diperbarui');
 
         return $show;
     }
 
     /**
-     * Make a form builder.
-     *
-     * @return Form
+     * Form input jurusan.
      */
     protected function form()
     {
         $form = new Form(new Jurusan());
 
-        $form->text('nama', __('Nama'));
-        $form->text('singkatan', __('Singkatan'));
-        $form->textarea('deskripsi', __('Deskripsi'));
-        $form->image('foto', 'Foto');
+        $form->text('nama', 'Nama')->required();
+        $form->text('singkatan', 'Singkatan')->required();
+        $form->textarea('deskripsi', 'Deskripsi')->rows(5);
+        $form->image('foto', 'Foto')
+             ->move('images/jurusan')
+             ->uniqueName()
+             ->removable()
+             ->rules('nullable|mimes:jpeg,jpg,png|max:2048');
 
         return $form;
     }

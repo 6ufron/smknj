@@ -10,57 +10,41 @@ use App\Models\Prestasi;
 
 class GaprestasiController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
-    protected $title = 'Gaprestasi';
+    protected $title = 'Prestasi Siswa';
 
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
     protected function grid()
     {
         $grid = new Grid(new Prestasi());
 
-        $grid->column('id', __('ID'));
-        $grid->column('foto_prestasi', __('Foto Prestasi'))->image();
-        $grid->column('judul', __('Judul'));
+        $grid->column('id', __('ID'))->sortable();
+        $grid->column('foto_prestasi', __('Foto'))->image('', 60, 60);
+        $grid->column('judul', __('Judul'))->limit(40);
         $grid->column('tanggal', __('Tanggal'))->date('d-m-Y');
-        $grid->column('created_at', __('Dibuat pada'));
-        $grid->column('updated_at', __('Diperbarui pada'));
+        $grid->column('created_at', __('Dibuat'))->sortable();
+
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->like('judul', 'Judul');
+            $filter->between('tanggal', 'Tanggal')->date();
+        });
 
         return $grid;
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
     protected function detail($id)
     {
         $show = new Show(Prestasi::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('foto_prestasi', __('Foto Prestasi'))->image();
+        $show->field('foto_prestasi', __('Foto'))->image();
         $show->field('judul', __('Judul'));
-        $show->field('tanggal', __('Tanggal'));
+        $show->field('tanggal', __('Tanggal'))->as(fn($date) => date('d-m-Y', strtotime($date)));
         $show->field('created_at', __('Dibuat pada'));
         $show->field('updated_at', __('Diperbarui pada'));
 
         return $show;
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
     protected function form()
     {
         $form = new Form(new Prestasi());
@@ -68,11 +52,15 @@ class GaprestasiController extends AdminController
         $form->image('foto_prestasi', __('Foto Prestasi'))
             ->move('images/foto_prestasi')
             ->uniqueName()
-            ->rules('mimes:jpeg,jpg,png|max:2048');
+            ->rules('required|mimes:jpeg,jpg,png|max:2048');
 
-        $form->text('judul', __('Judul'))->rules('required|max:255');
+        $form->text('judul', __('Judul'))
+            ->rules('required|max:255')
+            ->placeholder('Contoh: Juara 1 Lomba Sains Nasional');
 
-        $form->date('tanggal', __('Tanggal'))->rules('required|date');
+        $form->date('tanggal', __('Tanggal Prestasi'))
+            ->default(date('Y-m-d'))
+            ->rules('required|date');
 
         return $form;
     }

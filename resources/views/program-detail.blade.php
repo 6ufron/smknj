@@ -8,7 +8,7 @@
         width: 100%;
         height: auto;
         object-fit: contain;
-        border-radius: 1px;
+        border-radius: 7px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         display: block;
     }
@@ -38,6 +38,9 @@
                     <ol class="breadcrumb justify-content-center">
                         <li class="breadcrumb-item">
                             <a class="text-white" href="{{ route('beranda') }}">Beranda</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a class="text-white" href="#">Pages</a>
                         </li>
                         <li class="breadcrumb-item text-white active" aria-current="page">
                             @yield('title')

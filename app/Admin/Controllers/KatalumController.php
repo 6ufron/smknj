@@ -6,74 +6,63 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use \App\Models\KataAlumni;
+use App\Models\KataAlumni;
 
 class KatalumController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
-    protected $title = 'KataAlumni';
+    protected $title = 'Kata Alumni';
 
     /**
-     * Make a grid builder.
-     *
-     * @return Grid
+     * Grid data kata alumni.
      */
     protected function grid()
     {
         $grid = new Grid(new KataAlumni());
 
-        $grid->column('id', __('Id'));
-        $grid->column('nama', __('Nama'));
-        $grid->column('pekerjaan', __('Pekerjaan'));
-        $grid->column('pesan', __('Pesan'));
-        $grid->column('foto')->image();
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', 'ID');
+        $grid->column('nama', 'Nama');
+        $grid->column('pekerjaan', 'Pekerjaan');
+        $grid->column('pesan', 'Pesan');
+        $grid->column('foto', 'Foto')->image('', 60, 60);
+        $grid->column('created_at', 'Dibuat');
+        $grid->column('updated_at', 'Diperbarui');
 
         return $grid;
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
+     * Detail kata alumni.
      */
     protected function detail($id)
     {
         $show = new Show(KataAlumni::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('nama', __('Nama'));
-        $show->field('pekerjaan', __('Pekerjaan'));
-        $show->field('pesan', __('Pesan'));
-        $show->field('foto')->image();
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('id', 'ID');
+        $show->field('nama', 'Nama');
+        $show->field('pekerjaan', 'Pekerjaan');
+        $show->field('pesan', 'Pesan');
+        $show->field('foto', 'Foto')->image();
+        $show->field('created_at', 'Dibuat');
+        $show->field('updated_at', 'Diperbarui');
 
         return $show;
     }
 
     /**
-     * Make a form builder.
-     *
-     * @return Form
+     * Form input kata alumni.
      */
     protected function form()
     {
         $form = new Form(new KataAlumni());
 
-        $form->text('nama', __('Nama'));
-        $form->text('pekerjaan', __('Pekerjaan'));
-        $form->textarea('pesan', __('Pesan'));
+        $form->text('nama', 'Nama')->required();
+        $form->text('pekerjaan', 'Pekerjaan')->required();
+        $form->textarea('pesan', 'Pesan')->rows(5);
         $form->image('foto', 'Foto')
-            ->move('images/alumni')
-            ->uniqueName()
-            ->rules('mimes:jpeg,jpg,png|max:2048');
+             ->move('images/alumni')
+             ->uniqueName()
+             ->removable()
+             ->rules('nullable|mimes:jpeg,jpg,png|max:2048');
 
         return $form;
     }

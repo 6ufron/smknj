@@ -134,18 +134,20 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
-                {{-- Gunakan judul berita di header --}}
-                {{-- <h1 class="display-3 text-white animated slideInDown">{{ $berita->judul }}</h1> --}}
-                <h1 class="display-3 text-white animated slideInDown">Detail Berita</h1>
+                <h1 class="display-3 text-white animated slideInDown">
+                    @yield('title')
+                </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center">
                         <li class="breadcrumb-item">
                             <a class="text-white" href="{{ route('beranda') }}">Beranda</a>
                         </li>
-                        <li class="breadcrumb-item text-white">
-                            <a class="text-white" href="{{ route('berita-sekolah') }}">Berita</a>
+                        <li class="breadcrumb-item">
+                            <a class="text-white" href="#">Pages</a>
                         </li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">Detail</li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">
+                            @yield('title')
+                        </li>
                     </ol>
                 </nav>
             </div>

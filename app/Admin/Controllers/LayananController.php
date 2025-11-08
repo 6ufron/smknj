@@ -6,68 +6,56 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use \App\Models\Layanan;
+use App\Models\Layanan;
 
 class LayananController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
     protected $title = 'Layanan';
 
     /**
-     * Make a grid builder.
-     *
-     * @return Grid
+     * Grid data layanan.
      */
     protected function grid()
     {
         $grid = new Grid(new Layanan());
 
-        $grid->column('id', __('Id'));
-        $grid->column('icon', __('Icon'));
-        $grid->column('nama', __('Nama'));
-        $grid->column('deskripsi', __('Deskripsi'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', 'ID');
+        $grid->column('icon', 'Icon');
+        $grid->column('nama', 'Nama');
+        $grid->column('deskripsi', 'Deskripsi');
+        $grid->column('created_at', 'Dibuat');
+        $grid->column('updated_at', 'Diperbarui');
 
         return $grid;
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
+     * Detail data layanan.
      */
     protected function detail($id)
     {
         $show = new Show(Layanan::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('icon', __('Icon'));
-        $show->field('nama', __('Nama'));
-        $show->field('deskripsi', __('Deskripsi'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('id', 'ID');
+        $show->field('icon', 'Icon');
+        $show->field('nama', 'Nama');
+        $show->field('deskripsi', 'Deskripsi');
+        $show->field('created_at', 'Dibuat');
+        $show->field('updated_at', 'Diperbarui');
 
         return $show;
     }
 
     /**
-     * Make a form builder.
-     *
-     * @return Form
+     * Form input layanan.
      */
     protected function form()
     {
         $form = new Form(new Layanan());
 
-        $form->text('icon', __('Icon'));
-        $form->text('nama', __('Nama'));
-        $form->text('deskripsi', __('Deskripsi'));
+        $form->text('icon', 'Icon');
+        $form->text('nama', 'Nama');
+        $form->text('deskripsi', 'Deskripsi');
 
         return $form;
     }

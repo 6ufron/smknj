@@ -1,3 +1,43 @@
+<style>
+.host-with {
+    text-align: center;
+    padding: 1rem 0;
+    justify-content: center;
+    align-items: center;
+    background: #181d38; /* warna footer */
+    font-size: 0.95rem;
+    color: #ffffff; /* warna teks utama */
+    flex-wrap: wrap;
+}
+
+/* === Watermark halus sejajar di samping === */
+.host-with .copyright {
+    color: #292b3c; /* putih transparan, nyatu dg footer gelap */
+    margin-left: 12px;
+    font-weight: 600;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Efek elegan saat hover (opsional) */
+.host-with .copyright:hover {
+    opacity: 0.5;
+}
+
+/* === Responsif untuk layar kecil === */
+@media (max-width: 576px) {
+    .host-with {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.9rem;
+        padding: 0.8rem 0;
+    }
+    .host-with .copyright {
+        font-size: 0.85rem;
+        opacity: 0.25; /* sedikit lebih terlihat di layar kecil */
+    }
+}
+</style>
 <footer class="footer-custom">
     <div class="footer-top-section">
         
@@ -88,6 +128,7 @@
         </div>
         <div class="host-with">
             <span>Dikembangkan oleh Tim IT SMK Nurul Jadid</span>
+            <span class="copyright">@m6ufron & @qudus_adnan</span>
         </div>
     </div>
 </footer>

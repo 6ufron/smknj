@@ -3,16 +3,13 @@
 namespace App\Admin\Controllers;
 
 use OpenAdmin\Admin\Controllers\AuthController as BaseAuthController;
+use Illuminate\Http\Request;
 
 class AuthController extends BaseAuthController
 {
-    /**
-     * Override method getLogin jika ingin kustomisasi halaman login.
-     */
+    // Kustomisasi tampilan halaman login
     public function getLogin()
     {
-        // Contoh: Tambahkan logika khusus sebelum menampilkan form login
-        // Misalnya redirect jika sudah login
         if (auth('admin')->check()) {
             return redirect(admin_url('/'));
         }
@@ -20,19 +17,14 @@ class AuthController extends BaseAuthController
         return parent::getLogin();
     }
 
-    /**
-     * Override method postLogin jika ingin validasi tambahan saat login.
-     */
-    public function postLogin(\Illuminate\Http\Request $request)
+    // Validasi tambahan saat login (opsional)
+    public function postLogin(Request $request)
     {
-        // Tambahkan validasi custom di sini jika perlu
         return parent::postLogin($request);
     }
 
-    /**
-     * Override method getLogout jika ingin ubah perilaku logout.
-     */
-    public function getLogout(\Illuminate\Http\Request $request)
+    // Kustomisasi proses logout
+    public function getLogout(Request $request)
     {
         auth('admin')->logout();
         return redirect(admin_url('auth/login'));

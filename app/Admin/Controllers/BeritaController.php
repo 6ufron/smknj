@@ -12,6 +12,7 @@ class BeritaController extends AdminController
 {
     protected $title = 'Berita';
 
+    // Tabel data Berita
     protected function grid()
     {
         $grid = new Grid(new Berita());
@@ -24,23 +25,23 @@ class BeritaController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
-        // --- Filter ---
+        // Filter data
         $grid->filter(function($filter) {
-            $filter->disableIdFilter(); // Hapus filter default ID
-
-            $filter->like('judul', 'Judul'); // Pencarian berdasarkan judul
+            $filter->disableIdFilter();
+            $filter->like('judul', 'Judul');
             $filter->equal('kategori', 'Kategori')->select([
                 'sekolah' => 'Sekolah',
                 'pendidikan' => 'Pendidikan',
-                'prestasi' => 'Prestasi'
-            ]); // Filter kategori
-            $filter->between('created_at', 'Tanggal Dibuat')->date(); // Filter berdasarkan rentang tanggal dibuat
-            $filter->between('updated_at', 'Tanggal Diperbarui')->date(); // Filter berdasarkan rentang tanggal diperbarui
+                'prestasi' => 'Prestasi',
+            ]);
+            $filter->between('created_at', 'Tanggal Dibuat')->date();
+            $filter->between('updated_at', 'Tanggal Diperbarui')->date();
         });
 
         return $grid;
     }
 
+    // Detail data Berita
     protected function detail($id)
     {
         $show = new Show(Berita::findOrFail($id));
@@ -56,6 +57,7 @@ class BeritaController extends AdminController
         return $show;
     }
 
+    // Form input data Berita
     protected function form()
     {
         $form = new Form(new Berita());
@@ -67,9 +69,9 @@ class BeritaController extends AdminController
                 ->uniqueName()
                 ->rules('mimes:jpeg,jpg,png|max:2048');
             $form->select('kategori','Kategori')->options([
-                'sekolah' => 'Sekolah', 
-                'pendidikan' => 'Pendidikan', 
-                'prestasi' => 'Prestasi'
+                'sekolah' => 'Sekolah',
+                'pendidikan' => 'Pendidikan',
+                'prestasi' => 'Prestasi',
             ]);
         });
 
