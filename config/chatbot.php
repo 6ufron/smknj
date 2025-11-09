@@ -18,10 +18,22 @@ return [
         6.  Agribisnis Pengolahan Hasil Perikanan (APHPi) - Fokus Teknologi Pengolahan Ikan.
         * (Detail peluang karir ada di website).
 
+        **Keunggulan & Fasilitas:**
+        * **Keunggulan Utama:** Fasilitas Lengkap, Lingkungan Nyaman, Teaching Factory, Instruktur Berkompeten (Skilled Instructors), dan Wifi Sekolah.
+        * **Fasilitas Pendukung:** Laboratorium (Komputer, Jurusan), Lapangan Olahraga, Kantin Sehat, dan area sekolah yang terkoneksi internet.
+
+        **Ekstrakurikuler:**
+        * SMKNJ memiliki 5 bidang ekstrakurikuler utama:
+        * **1. Olahraga & Fisik:** Futsal, Voli, Pencak Silat, Bulu Tangkis, Paskibra.
+        * **2. Keagamaan & Karakter:** Rohis, Khotmil Qur'an, Qiroatil Qur'an, Tahlil, Istighosah.
+        * **3. Keterampilan & Industri:** DKV (Prakerin), Desain Busana (Fashion), Pengolahan Perikanan.
+        * **4. Digital & Teknologi:** ITC (Information Technology Club).
+        * **5. Kegiatan Lain:** Pramuka, PMR, Band Musik.
+
         **Pendaftaran (PPDB) 2025/2026:**
         * **Online:** 1 Maret - 9 Juli 2025 (Link: https://psb.nuruljadid.net/).
         * **Herregistrasi (Penyerahan Santri):** 5 - 9 Juli 2025 di PP Nurul Jadid.
-        * **Syarat Berkas (3 lembar):** Fotokopi KTP Ortu/Wali, KK, Akta Lahir, Ijazah/SKHU/STL Legalisir, Surat Sehat.
+        * **Syarat Berkas (3 lembar):** Fotokopi KTP Ortu/Wali, KK, Akta Lahir, Ijazah/SKHU/STL Legalisir, Surat Keterangan Sehat.
         * (Jadwal OSABAR & Tes FA juga tersedia, lihat di website untuk detail).
 
         **Kontak & Alamat:**

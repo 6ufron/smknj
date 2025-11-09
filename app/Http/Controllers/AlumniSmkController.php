@@ -4,129 +4,134 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumni;
 use Illuminate\Http\Request;
-// PENTING: Tambahkan ini untuk validasi
 use Illuminate\Validation\Rule; 
 
 class AlumniSmkController extends Controller
 {
-    // Halaman daftar alumni
+    // ==============================
+    // 1️⃣ Halaman Daftar Alumni
+    // ==============================
     public function tracer_study(Request $request)
     {
-        // Ambil input 'search' dan 'filter' dari URL
         $search = $request->input('search');
-        $filter = $request->input('filter', 'all'); // Default 'all'
+        $filter = $request->input('filter', 'all');
 
-        // Mulai query ke database
         $alumniQuery = Alumni::query();
 
-        // 1. Terapkan filter PENCARIAN
         if ($search) {
             $alumniQuery->where(function ($query) use ($search) {
                 $query->where('nama', 'like', "%{$search}%")
-                      ->orWhere('jurusan', 'like', "%{$search}%");
+                      ->orWhere('jurusan', 'like', "%{$search}%")
+                      ->orWhere('status', 'like', "%{$search}%")
+                      ->orWhere('orang_tua', 'like', "%{$search}%");
             });
         }
 
-        // 2. Terapkan filter STATUS
         if ($filter === 'hadir') {
-            $alumniQuery->where('status', 'Hadir');
+            $alumniQuery->where('hadir', 'Ya');
         } elseif ($filter === 'tidak_hadir') {
-            $alumniQuery->where('status', 'Tidak Hadir');
-        } elseif ($filter === 'belum') {
-            $alumniQuery->whereNull('status');
+            $alumniQuery->where('hadir', 'Tidak');
         }
-        // Jika 'all', tidak perlu filter status
 
-        // 3. Paginasi hasil query (10 item per halaman)
         $alumni = $alumniQuery->orderBy('nama', 'asc')->paginate(10)->appends($request->all());
 
-        // 4. Hitung statistik (ini tetap menghitung total, tidak terpengaruh filter)
-        $hadir = Alumni::where('status', 'Hadir')->count();
-        $tidak_hadir = Alumni::where('status', 'Tidak Hadir')->count();
-        $belum_mengisi = Alumni::whereNull('status')->count();
+        $hadir = Alumni::where('hadir', 'Ya')->count();
+        $tidak_hadir = Alumni::where('hadir', 'Tidak')->count();
+        $belum_mengisi = Alumni::whereNull('hadir')->count();
 
-        // 5. Cek jika ini adalah request AJAX
         if ($request->ajax()) {
-            // Jika AJAX, kirim HANYA bagian tabel-nya saja
             return view('alumni.partials.alumni_table', compact('alumni', 'search'))->render();
         }
 
-        // Jika request biasa (load halaman pertama kali), kirim view lengkap
         return view('alumni.tracer_study', compact('alumni', 'hadir', 'tidak_hadir', 'belum_mengisi', 'search', 'filter'));
     }
 
-    // Form edit status kehadiran
+    // ==============================
+    // 2️⃣ Form Edit Status
+    // ==============================
     public function status_kehadiran(Alumni $alumni)
     {
         return view('alumni.edit_status', compact('alumni'));
     }
 
-    // Update biodata alumni (tanpa mengubah NISN)
+    // ==============================
+    // 3️⃣ Update Biodata (Admin Side)
+    // ==============================
     public function update_biodata(Request $request, Alumni $alumni)
     {
         $request->validate([
-            'nama' => 'required|string',
-            'jurusan' => 'required|string',
-            'nomor_induk' => 'required|string',
-            'orang_tua' => 'required|string',
-            'status' => 'required|in:Hadir,Tidak Hadir',
+            'nama'       => 'required|string|max:255',
+            'orang_tua'  => 'nullable|string|max:255',
+            'jurusan'    => 'required|string|max:100',
+            'status'     => 'required|in:Hadir,Tidak Hadir',
         ]);
 
         $alumni->update([
-            'nama' => $request->nama,
-            'jurusan' => $request->jurusan,
-            'nomor_induk' => $request->nomor_induk,
-            'orang_tua' => $request->orang_tua,
-            'status' => $request->status
+            'nama'       => $request->nama,
+            'orang_tua'  => $request->orang_tua,
+            'jurusan'    => $request->jurusan,
+            'status'     => $request->status,
         ]);
 
-        return redirect()->route('change_status', $alumni)
+        return redirect()->route('alumni')
                          ->with('success', 'Biodata berhasil diperbarui');
     }
 
-    /**
-     * Menampilkan halaman form pendaftaran alumni baru.
-     */
+    // ==============================
+    // 4️⃣ Halaman Form Daftar Alumni
+    // ==============================
     public function create()
     {
-        // Pastikan Anda memiliki view di 'resources/views/alumni/form.blade.php'
         return view('alumni.form'); 
     }
 
-    /**
-     * Menyimpan data alumni baru dari form.
-     */
+    // ==============================
+    // 5️⃣ Simpan Data Form Alumni
+    // ==============================
     public function store(Request $request)
     {
-        // 1. Validasi data (sesuai diskusi kita)
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'nisn' => 'required|string|max:50|unique:alumni,nisn', // Pastikan unik
-            'tahun_masuk' => 'required|integer|digits:4',
-            'tahun_lulus' => 'required|integer|digits:4|gte:tahun_masuk', // Lulus >= Masuk
-            'jurusan' => 'required|string|max:100',
-            'email' => 'required|email|max:255|unique:alumni,email', // Pastikan unik
-            'no_wa' => 'required|string|max:20',
-            'status_saat_ini' => 'required|string',
-            'instansi' => 'nullable|string|max:255',
-            'status' => 'required|in:Hadir,Tidak Hadir', // Untuk konfirmasi acara
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Opsional foto
-            'instagram' => 'nullable|string|max:100',
-            'linkedin' => 'nullable|string|max:255',
-            'pesan' => 'nullable|string',
+            'nik'             => 'nullable|string|max:20|unique:alumni,nik',
+            'nama'            => 'required|string|max:255',
+            'orang_tua'       => 'nullable|string|max:255',
+            'nisn'            => 'required|string|max:50|unique:alumni,nisn',
+            'tahun_masuk'     => 'required|integer|digits:4',
+            'tahun_lulus'     => 'required|integer|digits:4|gte:tahun_masuk',
+            'jurusan'         => 'required|string|max:100',
+            'email'           => 'required|email|max:150|unique:alumni,email',
+            'whatsapp'        => 'required|string|max:20',
+            'status_saat_ini' => 'required|string|max:100',
+            'instansi'        => 'nullable|string|max:255',
+            'hadir'           => 'required|in:Ya,Tidak',
+            'foto'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'instagram'       => 'nullable|string|max:100',
+            'linkedin'        => 'nullable|string|max:100',
+            'kesan_pesan'     => 'nullable|string',
         ]);
 
-        // (Opsional) Handle upload foto jika ada
         if ($request->hasFile('foto')) {
             $validatedData['foto'] = $request->file('foto')->store('alumni_photos', 'public');
         }
-        
-        // 2. Simpan ke Database
-        // (Pastikan Model Alumni Anda punya $fillable untuk semua kolom ini)
-        Alumni::create($validatedData);
 
-        // 3. Arahkan kembali ke halaman daftar alumni dengan pesan sukses
-        return redirect()->route('alumni')
-            ->with('success', 'Terima kasih! Data Anda telah berhasil terdaftar.');
+        Alumni::create([
+            'nik'             => $validatedData['nik'] ?? null,
+            'nama'            => $validatedData['nama'],
+            'orang_tua'       => $validatedData['orang_tua'] ?? null,
+            'nisn'            => $validatedData['nisn'],
+            'tahun_masuk'     => $validatedData['tahun_masuk'],
+            'tahun_lulus'     => $validatedData['tahun_lulus'],
+            'jurusan'         => $validatedData['jurusan'],
+            'email'           => $validatedData['email'],
+            'whatsapp'        => $validatedData['whatsapp'],
+            'status'          => $validatedData['status_saat_ini'],
+            'instansi'        => $validatedData['instansi'] ?? null,
+            'hadir'           => $validatedData['hadir'],
+            'foto'            => $validatedData['foto'] ?? null,
+            'instagram'       => $validatedData['instagram'] ?? null,
+            'linkedin'        => $validatedData['linkedin'] ?? null,
+            'kesan_pesan'     => $validatedData['kesan_pesan'] ?? null,
+        ]);
+
+        return redirect()->route('alumni')->with('success', 'Terima kasih! Data Anda berhasil didaftarkan.');
     }
 }

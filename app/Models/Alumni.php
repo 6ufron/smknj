@@ -2,25 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Traits\UsesHashids;
 
 class Alumni extends Model
 {
-    use UsesHashids;
+    use HasFactory;
 
     protected $table = 'alumni';
 
     protected $fillable = [
+        'nik',
         'nama',
-        'nisn',
-        'jurusan',
-        'status',
         'orang_tua',
-        'nomor_induk',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'alamat',
-        'email'
+        'nisn',
+        'tahun_masuk',
+        'tahun_lulus',
+        'jurusan',
+        'email',
+        'whatsapp',
+        'status',
+        'instansi',
+        'hadir',
+        'foto',
+        'instagram',
+        'linkedin',
+        'kesan_pesan',
     ];
 }

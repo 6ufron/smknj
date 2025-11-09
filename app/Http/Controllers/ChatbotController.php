@@ -76,7 +76,6 @@ class ChatbotController extends Controller
                     return response()->json(['reply' => 'Maaf, AI tidak memberikan jawaban yang valid.'], 500);
                 }
 
-                // Membersihkan format (ambil dari contoh teman Anda, sesuaikan jika perlu)
                 // Kode ini mencoba membersihkan tanda '*' yang mungkin dihasilkan AI
                 $aiAnswer = preg_replace('/(\*)\s*([^\n:]+):/', '**$2**:', $aiAnswer);
                 $aiAnswer = preg_replace('/^(\*)\s*(.+)$/m', ' **$2**', $aiAnswer);

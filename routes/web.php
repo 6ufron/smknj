@@ -1,6 +1,5 @@
 <?php
 
-use App\Admin\Controllers\AlumniController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\ProfilSMKNJController;
@@ -45,20 +44,25 @@ Route::get('program/{jurusan}', [ProgramSMKNJController::class, 'detail'])->name
 Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'ekstrakurikuler'])->name('ekstrakurikuler');
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])
      ->name('ekstrakurikuler');
-// PENTING: Jika Anda punya route detail ekstrakurikuler, ubah dari {id} -> {ekstrakurikuler}
+// PENTING: Jika punya route detail ekstrakurikuler, ubah dari {id} -> {ekstrakurikuler}
 
 // Alumni
 Route::prefix('alumni-smknj')->group(function () {
-    Route::get('/', [AlumniSmkController::class, 'tracer_study'])->name('alumni');
+    // (/alumni-smknj)
+    Route::get('/', [AlumniSmkController::class, 'tracer_study'])->name('alumni'); // <== DIGANTI DARI 'alumni'
+    
+    // (/alumni-smknj/change_status/{alumni})
     Route::get('change_status/{alumni}', [AlumniSmkController::class, 'status_kehadiran'])->name('change_status');
+    
+    // (/alumni-smknj/update_biodata/{alumni})
     Route::put('update_biodata/{alumni}', [AlumniSmkController::class, 'update_biodata'])->name('update_biodata');
+    
+    // (/alumni-smknj/daftar)
+    Route::get('daftar', [AlumniSmkController::class, 'create'])->name('alumni.form');
+    
+    // (/alumni-smknj/store)
+    Route::post('store', [AlumniSmkController::class, 'store'])->name('alumni.store');
 });
-
-// Rute untuk menampilkan form
-Route::get('/alumni/daftar', [AlumniController::class, 'create'])->name('alumni.form');
-
-// Rute untuk MENYIMPAN data dari form
-Route::post('/alumni/store', [AlumniController::class, 'store'])->name('alumni.store');
 
 // Galeri (Jika ada detail page, harus diubah juga)
 Route::get('galeri-foto', [GaleriController::class, 'foto'])->name('galeri.foto');
@@ -81,8 +85,6 @@ Route::get('/dokumen/{id}/download', [DownloadSMKNJController::class, 'download'
 
 // Route untuk API increment download count
 // Route::post('/downloads/{id}/increment', [DownloadSMKNJController::class, 'incrementDownloadCount']);
-
-// PENTING: Jika Anda punya route detail untuk ini, ubah dari {id} -> {pengumuman} atau {download}
 
 // Cek Kelulusan (Aman)
 Route::get('/cek-kelulusan', [KelulusanController::class, 'showCheckForm'])->name('cek-kelulusan');
