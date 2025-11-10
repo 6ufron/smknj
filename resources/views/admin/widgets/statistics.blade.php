@@ -7,7 +7,7 @@
             </div>
             <div>
                 <h4 class="fw-bold mb-1 text-dark">Dashboard</h4>
-                <p class="text-muted mb-0">Ringkasan data dan analisis sistem SMK Nurul Jadid</p>
+                <p class="text-muted mb-0">Pangkalan data dan analisis sistem SMK Nurul Jadid</p>
             </div>
         </div>
     </div>

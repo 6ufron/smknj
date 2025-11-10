@@ -70,9 +70,11 @@
             <a href="{{ route('alumni') }}"
                class="nav-item nav-link {{ Request::routeIs('alumni') ? 'active' : '' }}">Alumni</a>
 
-            <a href="{{ route('pengumuman') }}" class="nav-item nav-link">Pengumuman</a>
+            <a href="{{ route('pengumuman') }}"
+                class="nav-item nav-link {{ Request::routeIs('pengumuman*') ? 'active' : '' }}">Pengumuman</a>
 
-            <a href="{{ route('download.index') }}" class="nav-item nav-link">Download</a>
+            <a href="{{ route('download.index') }}"
+                class="nav-item nav-link {{ Request::routeIs('download*') ? 'active' : '' }}">Download</a>
 
             <a href="{{ route('kontak_kami') }}"
                class="nav-item nav-link {{ Request::routeIs('kontak_kami') ? 'active' : '' }}">Kontak</a>

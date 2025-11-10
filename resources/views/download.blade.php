@@ -7,7 +7,6 @@
 @endphp
 
 @push('styles')
-
 @endpush
 
 @section('content')
@@ -38,297 +37,135 @@
 
 <div class="container-xxl py-5 document-section">
     <div class="container">
-        {{-- Header Halaman - TETAP SAMA seperti semula --}}
+        {{-- Header Halaman --}}
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-primary px-3 d-inline-block">Arsip</h6>
             <h1 class="mb-5">Download Dokumen</h1>
         </div>
 
         <!-- Search & Filters -->
-        <div class="filter-group">
-            <div class="search-box">
-                <input type="text" id="documentSearch" placeholder="Cari Dokumen...">
+        <form id="filterForm" method="GET" action="{{ route('download.index') }}" class="wow fadeInUp" data-wow-delay="0.2s">
+            <div class="filter-group">
+                <div class="search-box">
+                    <input type="text" id="documentSearch" name="search" placeholder="Cari Dokumen..." value="{{ $search ?? '' }}">
                     <i class="fas fa-search"></i>
-            </div>
-                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Semua</button>
-                    <button class="filter-btn" data-filter="pdf">PDF</button>
-                    <button class="filter-btn" data-filter="doc">DOC</button>
-                    <button class="filter-btn" data-filter="xls">Excel</button>
-                    {{-- <button class="filter-btn" data-filter="csv">CSV</button> --}}
-                    {{-- <button class="filter-btn" data-filter="audio">Audio</button>
-                    <button class="filter-btn" data-filter="video">Video</button>
-                    <button class="filter-btn" data-filter="image">Gambar</button> --}}
-                    <button class="filter-btn" data-filter="zip">Archive</button>
                 </div>
-            </div>   
+                <nav class="filter-buttons">
+                    <a href="#" class="filter-btn {{ ($filter ?? 'all') == 'all' ? 'active' : '' }}" data-filter="all">Semua</a>
+                    <a href="#" class="filter-btn {{ ($filter ?? 'all') == 'pdf' ? 'active' : '' }}" data-filter="pdf">PDF</a>
+                    <a href="#" class="filter-btn {{ ($filter ?? 'all') == 'doc' ? 'active' : '' }}" data-filter="doc">DOC</a>
+                    <a href="#" class="filter-btn {{ ($filter ?? 'all') == 'xls' ? 'active' : '' }}" data-filter="xls">Excel</a>
+                    <a href="#" class="filter-btn {{ ($filter ?? 'all') == 'zip' ? 'active' : '' }}" data-filter="zip">Archive</a>
+                    <input type="hidden" name="filter" id="filterInput" value="{{ $filter ?? 'all' }}">
+                </nav>
+            </div>
+        </form>
 
         <!-- Documents Grid -->
-        <div class="documents-grid">
-            @forelse ($downloads as $index => $item)
-                @php
-                    $ext = pathinfo($item->file_path, PATHINFO_EXTENSION);
-                    $fileType = match(strtolower($ext)) {
-                        'pdf' => 'pdf',
-                        'doc', 'docx' => 'doc',
-                        'xls', 'xlsx' => 'xls',
-                        'csv' => 'csv',
-                        'zip', 'rar', '7z' => 'zip',
-                        // 'mp3', 'wav', 'aac', 'ogg', 'flac' => 'audio',
-                        // 'mp4', 'avi', 'mov', 'wmv', 'mkv', 'flv' => 'video',
-                        // 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg' => 'image',
-                        default => 'default',
-                    };
-                    
-                    $iconClass = match($fileType) {
-                        'pdf' => 'fas fa-file-pdf',
-                        'doc' => 'fas fa-file-word',
-                        'xls' => 'fas fa-file-excel',
-                        'csv' => 'fas fa-file-csv',
-                        'zip' => 'fas fa-file-archive',
-                        // 'audio' => 'fas fa-file-audio',
-                        // 'video' => 'fas fa-file-video',
-                        // 'image' => 'fas fa-file-image',
-                        default => 'fas fa-file',
-                    };
-
-                    // Calculate file size
-                    $fileSize = '—';
-                    if ($item->file_path && file_exists(storage_path('app/public/' . $item->file_path))) {
-                        $size = filesize(storage_path('app/public/' . $item->file_path));
-                        if ($size >= 1073741824) {
-                            $fileSize = number_format($size / 1073741824, 1) . ' GB';
-                        } elseif ($size >= 1048576) {
-                            $fileSize = number_format($size / 1048576, 1) . ' MB';
-                        } elseif ($size >= 1024) {
-                            $fileSize = number_format($size / 1024, 1) . ' KB';
-                        } else {
-                            $fileSize = $size . ' B';
-                        }
-                    }
-                @endphp
-
-                <div class="document-card wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.1) }}s" 
-                     data-file-type="{{ $fileType }}" data-title="{{ strtolower($item->title) }}"
-                     style="animation-delay: {{ $index * 0.1 }}s">
-                    
-                    <div class="document-card-header">
-                        <div class="document-icon {{ $fileType }}">
-                            <i class="{{ $iconClass }} text-white"></i>
-                        </div>
-                        <div class="document-info">
-                            <h3 class="document-title">{{ $item->title }}</h3>
-                            @if($item->description)
-                                <p class="document-description">{{ $item->description }}</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="document-card-body">
-                        <div class="document-meta">
-                            <div class="document-type">
-                                <span class="file-badge {{ $fileType }}">
-                                    {{ strtoupper($ext) }}
-                                </span>
-                            </div>
-                            <div class="document-details">
-                                <div class="document-date">
-                                    <i class="far fa-calendar me-1"></i>
-                                    {{ Carbon::parse($item->created_at)->isoFormat('D MMM Y') }}
-                                </div>
-                                <div class="document-size">
-                                    <i class="fas fa-weight-hanging me-1"></i>
-                                    {{ $fileSize }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="document-actions">
-                        @if ($item->file_path && file_exists(storage_path('app/public/' . $item->file_path)))
-                            <a href="{{ asset('storage/' . $item->file_path) }}" 
-                               class="btn btn-outline-primary btn-sm rounded-pill px-3 w" 
-                               target="_blank" 
-                               download
-                               onclick="incrementDownloadCount({{ $item->id }})">
-                                <i class="fa fa-download me-1"></i>
-                                Download
-                            </a>
-                            {{-- <a href="
-                            {{ route('dokumen.show', $item->id) }}
-                             " class="view-btn">
-                                <i class="fas fa-eye me-1"></i>
-                                Lihat Detail
-                            </a> --}}
-                        @else
-                            <span class="download-btn missing">
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                File Tidak Tersedia
-                            </span>
-                        @endif
-                        
-                        {{-- <div class="download-count">
-                            <i class="fas fa-download"></i>
-                            {{ $item->download_count ?? 0 }}
-                        </div> --}}
-                    </div>
-                </div>
-            @empty
-                <div class="empty-state wow fadeInUp" data-wow-delay="0.3s">
-                    <i class="fas fa-folder-open"></i>
-                    <h4>Belum Ada Dokumen Tersedia</h4>
-                    <p>Dokumen akan segera diupload dan dapat diunduh di sini.</p>
-                </div>
-            @endforelse
+        {{-- Ini adalah Target AJAX --}}
+        <div id="documentDataContainer" class="wow fadeInUp" data-wow-delay="0.3s">
+            {{-- Memuat tampilan tabel parsial untuk pertama kali --}}
+            @include('download_partials', ['downloads' => $downloads, 'search' => $search ?? ''])
         </div>
 
-        <!-- Pagination -->
-        @if(method_exists($downloads, 'links') && $downloads->count())  
-            <div class="pagination-container wow fadeInUp" data-wow-delay="0.4s">
-                <div class="d-flex justify-content-center">
-                    {{ $downloads->links('pagination::bootstrap-5') }}
-                </div>
-            </div>
-        @endif
     </div>
 </div>
 @endsection
 
 @push('scripts')
+{{-- === SELURUH JAVASCRIPT DIGANTI DENGAN LOGIKA AJAX === --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Elements
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const documentCards = document.querySelectorAll('.document-card');
-        const searchInput = document.getElementById('documentSearch');
-        const documentsContainer = document.getElementById('documentsContainer');
         
-        let currentFilter = 'all';
-        let currentSearch = '';
+        const dataContainer = document.getElementById('documentDataContainer');
+        const filterForm = document.getElementById('filterForm');
+        const searchInput = document.getElementById('documentSearch');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const filterInput = document.getElementById('filterInput');
+        
+        let searchTimer;
 
-        // Filter functionality
+        // Fungsi utama untuk mengambil data via AJAX
+        async function fetchData(url) {
+            dataContainer.classList.add('loading');
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const html = await response.text();
+                dataContainer.innerHTML = html;
+                window.history.pushState(null, '', url);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                dataContainer.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h4>Gagal Memuat Data</h4><p>Silakan coba muat ulang halaman.</p></div>';
+            } finally {
+                dataContainer.classList.remove('loading');
+            }
+        }
+
+        // 1. Handle pencarian (dengan debounce 300ms)
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                const formData = new FormData(filterForm);
+                // Pastikan parameter 'page' dihapus saat melakukan pencarian baru
+                formData.delete('page'); 
+                const params = new URLSearchParams(formData);
+                const url = `${filterForm.action}?${params.toString()}`;
+                fetchData(url);
+            }, 300);
+        });
+
+        // 2. Handle klik tombol filter
         filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Update active button
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); 
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
                 
-                currentFilter = this.getAttribute('data-filter');
-                applyFilters();
+                const filterValue = this.dataset.filter;
+                filterInput.value = filterValue;
+
+                const formData = new FormData(filterForm);
+                // Pastikan parameter 'page' dihapus saat ganti filter
+                formData.delete('page'); 
+                const params = new URLSearchParams(formData);
+                const url = `${filterForm.action}?${params.toString()}`;
+                fetchData(url);
             });
         });
 
-        // Search functionality - improved
-        searchInput.addEventListener('input', function() {
-            currentSearch = this.value.toLowerCase().trim();
-            applyFilters();
-        });
+        // 3. Handle klik link paginasi (menggunakan event delegation)
+        dataContainer.addEventListener('click', function(e) {
+            const paginationLink = e.target.closest('.pagination .page-link');
+            
+            if (paginationLink) {
+                e.preventDefault(); 
+                const url = paginationLink.getAttribute('href');
+                if (url) {
+                    // Ambil URL dan tambahkan #documentDataContainer agar halaman scroll ke atas
+                    const urlWithFragment = new URL(url);
+                    urlWithFragment.hash = 'documentDataContainer';
+                    fetchData(urlWithFragment.href);
 
-        // Combined filter function
-        function applyFilters() {
-            let visibleCount = 0;
-            let hasVisibleItems = false;
-
-            documentCards.forEach(card => {
-                const fileType = card.getAttribute('data-file-type');
-                const title = card.querySelector('.document-title').textContent.toLowerCase();
-                const description = card.querySelector('.document-description')?.textContent.toLowerCase() || '';
-                
-                // Check if card matches both filter and search
-                const matchesFilter = currentFilter === 'all' || fileType === currentFilter;
-                const matchesSearch = currentSearch === '' || 
-                                   title.includes(currentSearch) || 
-                                   description.includes(currentSearch);
-                
-                if (matchesFilter && matchesSearch) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                    hasVisibleItems = true;
-                    
-                    // Highlight search term in title
-                    if (currentSearch !== '') {
-                        highlightText(card.querySelector('.document-title'), currentSearch);
-                    } else {
-                        removeHighlight(card.querySelector('.document-title'));
-                    }
-                } else {
-                    card.style.display = 'none';
+                    // Scroll ke atas container
+                    document.getElementById('documentDataContainer').scrollIntoView({ behavior: 'smooth' });
                 }
-            });
-
-            // Show/hide empty state
-            showEmptyState(!hasVisibleItems);
-            
-            // Add animation to visible cards
-            animateVisibleCards();
-        }
-
-        // Highlight search term in text
-        function highlightText(element, searchTerm) {
-            const text = element.textContent;
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
-            const highlighted = text.replace(regex, '<mark class="search-highlight">$1</mark>');
-            element.innerHTML = highlighted;
-        }
-
-        // Remove highlight
-        function removeHighlight(element) {
-            element.innerHTML = element.textContent;
-        }
-
-        // Show empty state when no results
-        function showEmptyState(show) {
-            let emptyState = document.querySelector('.empty-state-search');
-            
-            if (show && !emptyState) {
-                emptyState = document.createElement('div');
-                emptyState.className = 'empty-state wow fadeInUp empty-state-search';
-                emptyState.innerHTML = `
-                    <i class="fas fa-search"></i>
-                    <h4>Tidak Ada Hasil Pencarian</h4>
-                    <p>Tidak ditemukan dokumen dengan kata kunci "<strong>${currentSearch}</strong>"${currentFilter !== 'all' ? ` dalam kategori ${currentFilter.toUpperCase()}` : ''}.</p>
-                    <button class="btn btn-primary mt-3" onclick="clearSearch()">
-                        <i class="fas fa-times me-2"></i>Hapus Pencarian
-                    </button>
-                `;
-                documentsContainer.appendChild(emptyState);
-            } else if (!show && emptyState) {
-                emptyState.remove();
             }
-        }
-
-        // Animate visible cards with staggered effect
-        function animateVisibleCards() {
-            const visibleCards = Array.from(documentCards).filter(card => 
-                card.style.display !== 'none'
-            );
-            
-            visibleCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('wow', 'fadeInUp');
-            });
-        }
-
-        // Clear search function
-        window.clearSearch = function() {
-            searchInput.value = '';
-            currentSearch = '';
-            applyFilters();
-        };
-
-        // Initialize
-        applyFilters();
+        });
+        
+        // Fungsi ini tidak lagi diperlukan karena controller yang menangani
+        // function incrementDownloadCount(downloadId) { ... }
     });
-
-    // Function to increment download count (tetap sama)
-    function incrementDownloadCount(downloadId) {
-        fetch(`/api/downloads/${downloadId}/increment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        }).catch(error => console.error('Error:', error));
-    }
 </script>
 @endpush

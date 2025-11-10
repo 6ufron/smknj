@@ -1,3 +1,11 @@
+{{-- Info Jumlah Data --}}
+@if($alumni->total() > 0)
+<div class="search-stats mt-3" id="searchStats">
+    Menampilkan {{ $alumni->firstItem() }} sampai {{ $alumni->lastItem() }} dari total {{ $alumni->total() }} alumni
+</div>
+@endif
+
+{{-- Tabel Alumni --}}
 <div class="table-responsive">
     <table class="table table-alumni" id="alumniTable">
         <thead>
@@ -68,7 +76,7 @@
                         <i class="fas fa-search fa-2x mb-3"></i>
                         <h4>Tidak Ada Hasil</h4>
                         <p id="emptyStateMessage">Tidak ditemukan alumni yang sesuai dengan kriteria pencarian.</p>
-                        <a href="{{ route('tracer_study') }}" class="btn btn-primary mt-3">
+                        <a href="{{ route('alumni') }}" class="btn btn-primary mt-3">
                             Tampilkan Semua
                         </a>
                     </div>
@@ -88,9 +96,4 @@
 </div>
 @endif
 
-{{-- Info Jumlah Data --}}
-@if($alumni->total() > 0)
-<div class="search-stats mt-3" id="searchStats">
-    Menampilkan {{ $alumni->firstItem() }} sampai {{ $alumni->lastItem() }} dari total {{ $alumni->total() }} alumni
-</div>
-@endif
+

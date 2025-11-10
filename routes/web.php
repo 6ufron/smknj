@@ -24,7 +24,7 @@ use App\Http\Controllers\PrestasiController;
 // Beranda
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 
-// Profil SMKNJ (Tidak ada parameter, aman)
+// Profil SMKNJ
 Route::prefix('profil-smknj')->group(function () {
     Route::get('/', [ProfilSMKNJController::class, 'index'])->name('smknj.index');
     Route::get('visi-misi', [ProfilSMKNJController::class, 'vimisi'])->name('smknj.vimisi');
@@ -86,15 +86,15 @@ Route::get('/dokumen/{id}/download', [DownloadSMKNJController::class, 'download'
 // Route untuk API increment download count
 // Route::post('/downloads/{id}/increment', [DownloadSMKNJController::class, 'incrementDownloadCount']);
 
-// Cek Kelulusan (Aman)
+// Cek Kelulusan 
 Route::get('/cek-kelulusan', [KelulusanController::class, 'showCheckForm'])->name('cek-kelulusan');
 Route::post('/hasil-kelulusan', [KelulusanController::class, 'processCheck'])->name('hasil-kelulusan');
 
-// Chatbot AI (Aman)
+// Chatbot AI 
 Route::post('/ai-chat', [ChatbotController::class, 'handleChat'])->name('ai.chat');
 
-// Kontak (Aman)
+// Kontak 
 Route::view('kontak', 'kontak')->name('kontak_kami');
 
-// PPDB (Aman)
+// PPDB 
 Route::view('ppdb-smknj', 'info_ppdb')->name('ppdb');

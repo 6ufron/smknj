@@ -53,11 +53,11 @@
             </div>
             <div class="contact-item">
                 <i class="fas fa-phone-alt"></i>
-                <a href="tel:+62-822-6468-2385" class="text-white">(+62-822) 6468-2385</a>
+                <a href="tel:+62-822-6468-2385" class="text-white">+62 812-5907-5405</a>
             </div>
             <div class="contact-item">
                 <i class="fas fa-envelope"></i>
-                <a href="mailto:info@smknuruljadid.sch.id" class="text-white">info@smknj.sch.id</a>
+                <a href="mailto:smknurja.paiton@gmail.com" class="text-white">smknurja.paiton@gmail.com</a>
             </div>
         </div>
 

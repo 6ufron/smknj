@@ -3,39 +3,6 @@
 @section('title', 'Form Pendaftaran Alumni')
 
 @push('styles')
-<style>
-    .form-section-header {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--primary);
-        border-bottom: 2px solid var(--primary);
-        padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
-        margin-top: 2rem;
-    }
-    .form-card {
-        border-radius: 7px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        border: none;
-    }
-    .form-check-input:checked {
-        background-color: var(--primary);
-        border-color: var(--primary);
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
-    }
-    .input-group-text {
-        background-color: #f8f9fa;
-        border: 1px solid #e1e5ee;
-        border-radius: 8px;
-    }
-    .field-icon {
-        color: var(--primary);
-        font-size: 1.1rem;
-    }
-</style>
 @endpush
 
 @section('content')

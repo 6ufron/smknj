@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumni;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule; 
+use Illuminate\Validation\Rule;
 
 class AlumniSmkController extends Controller
 {
-    // ==============================
-    // 1️⃣ Halaman Daftar Alumni
-    // ==============================
+    //  Halaman Daftar Alumni
     public function tracer_study(Request $request)
     {
         $search = $request->input('search');
@@ -18,6 +16,7 @@ class AlumniSmkController extends Controller
 
         $alumniQuery = Alumni::query();
 
+        // 🔍 Pencarian
         if ($search) {
             $alumniQuery->where(function ($query) use ($search) {
                 $query->where('nama', 'like', "%{$search}%")
@@ -27,67 +26,74 @@ class AlumniSmkController extends Controller
             });
         }
 
+        // Filter Kehadiran
         if ($filter === 'hadir') {
             $alumniQuery->where('hadir', 'Ya');
         } elseif ($filter === 'tidak_hadir') {
             $alumniQuery->where('hadir', 'Tidak');
+        } elseif ($filter === 'belum') {
+            $alumniQuery->whereNull('hadir')->orWhere('hadir', '');
         }
 
-        $alumni = $alumniQuery->orderBy('nama', 'asc')->paginate(10)->appends($request->all());
+        $alumni = $alumniQuery->orderBy('nama', 'asc')
+                              ->paginate(10)
+                              ->appends($request->all());
 
-        $hadir = Alumni::where('hadir', 'Ya')->count();
-        $tidak_hadir = Alumni::where('hadir', 'Tidak')->count();
-        $belum_mengisi = Alumni::whereNull('hadir')->count();
+        // Statistik
+        $hadir          = Alumni::where('hadir', 'Ya')->count();
+        $tidak_hadir    = Alumni::where('hadir', 'Tidak')->count();
+        $belum_mengisi  = Alumni::whereNull('hadir')->orWhere('hadir', '')->count();
 
+        // AJAX response
         if ($request->ajax()) {
             return view('alumni.partials.alumni_table', compact('alumni', 'search'))->render();
         }
 
-        return view('alumni.tracer_study', compact('alumni', 'hadir', 'tidak_hadir', 'belum_mengisi', 'search', 'filter'));
+        return view('alumni.tracer_study', compact(
+            'alumni',
+            'hadir',
+            'tidak_hadir',
+            'belum_mengisi',
+            'search',
+            'filter'
+        ));
     }
 
-    // ==============================
-    // 2️⃣ Form Edit Status
-    // ==============================
+
+    //  Form Edit Status
     public function status_kehadiran(Alumni $alumni)
     {
         return view('alumni.edit_status', compact('alumni'));
     }
 
-    // ==============================
-    // 3️⃣ Update Biodata (Admin Side)
-    // ==============================
+    // Update Biodata (Admin Side)
     public function update_biodata(Request $request, Alumni $alumni)
     {
         $request->validate([
-            'nama'       => 'required|string|max:255',
-            'orang_tua'  => 'nullable|string|max:255',
-            'jurusan'    => 'required|string|max:100',
-            'status'     => 'required|in:Hadir,Tidak Hadir',
+            'nama'      => 'required|string|max:255',
+            'orang_tua' => 'nullable|string|max:255',
+            'jurusan'   => 'required|string|max:100',
+            'status'    => 'required|in:Hadir,Tidak Hadir',
         ]);
 
         $alumni->update([
-            'nama'       => $request->nama,
-            'orang_tua'  => $request->orang_tua,
-            'jurusan'    => $request->jurusan,
-            'status'     => $request->status,
+            'nama'      => $request->nama,
+            'orang_tua' => $request->orang_tua,
+            'jurusan'   => $request->jurusan,
+            'status'    => $request->status,
         ]);
 
         return redirect()->route('alumni')
                          ->with('success', 'Biodata berhasil diperbarui');
     }
 
-    // ==============================
-    // 4️⃣ Halaman Form Daftar Alumni
-    // ==============================
+    //  Halaman Form Daftar Alumni
     public function create()
     {
-        return view('alumni.form'); 
+        return view('alumni.form');
     }
 
-    // ==============================
-    // 5️⃣ Simpan Data Form Alumni
-    // ==============================
+    //  Simpan Data Form Alumni
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -132,6 +138,7 @@ class AlumniSmkController extends Controller
             'kesan_pesan'     => $validatedData['kesan_pesan'] ?? null,
         ]);
 
-        return redirect()->route('alumni')->with('success', 'Terima kasih! Data Anda berhasil didaftarkan.');
+        return redirect()->route('alumni')
+                         ->with('success', 'Terima kasih! Data Anda berhasil didaftarkan.');
     }
 }
